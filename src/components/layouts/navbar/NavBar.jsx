@@ -1,6 +1,6 @@
 //import CartWidget from "./CartWidget"
-import dragon from "../assets/dragon-solid.svg";
-import CartWidget from "./CartWidget"
+import dragon from "../../../assets/dragon-solid.svg";
+import CartWidget from "../../common/cartWidget/CartWidget"
 
 
 const NavBar = () => {

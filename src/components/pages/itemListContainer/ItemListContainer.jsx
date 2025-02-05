@@ -9,7 +9,7 @@ const ItemListContainer = ({ greeting }) => {
 }
 
 ItemListContainer.propTypes = {
-    greeting: PropTypes.string.isRequired, // greeting debe ser una cadena obligatoria
+    greeting: PropTypes.string.isRequired,
   };
 
 export default ItemListContainer
