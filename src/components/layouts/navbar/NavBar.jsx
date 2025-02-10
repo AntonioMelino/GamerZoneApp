@@ -1,6 +1,5 @@
-//import CartWidget from "./CartWidget"
-import dragon from "../../../assets/dragon-solid.svg";
 import CartWidget from "../../common/cartWidget/CartWidget"
+import LogoIcon from '@mui/icons-material/SportsEsports';
 
 
 const NavBar = () => {
@@ -8,7 +7,7 @@ const NavBar = () => {
 
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
-        <img src={dragon} alt="Logo" style={{ width: "30px", height: "30px" }} />
+        <LogoIcon/>
         <a className="navbar-brand" href="#">
           GameZoneApp
         </a>
@@ -47,8 +46,8 @@ const NavBar = () => {
             </li>
           </ul>
         </div>
-      </div>
       <CartWidget/>
+      </div>
     </nav>
   )
 }

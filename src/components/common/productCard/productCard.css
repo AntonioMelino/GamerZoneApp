@@ -1,0 +1,10 @@
+.image{
+    width: 100%;
+}
+
+.container-product{
+    width: 400px;
+    height: auto;
+    background-color: steelblue;
+    border: 2px solid black;
+}

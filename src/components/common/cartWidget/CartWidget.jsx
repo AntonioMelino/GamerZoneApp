@@ -1,10 +1,14 @@
-import cart from "../../../assets/cart-shopping-solid.svg";
+import CartIcon from '@mui/icons-material/ShoppingCart';
+import { Badge } from '@mui/material';
 
 const CartWidget = () => {
   return (
     <div>
-      <img src={cart} alt="Carrito de compras" style={{ width: "30px", height: "30px" }} />
-      <span style={{ fontSize: "16px", fontWeight: "bold" }}>5</span>
+
+        <Badge badgeContent={0} color="primary" showZero={true}>
+          <CartIcon/>
+        </Badge>
+
     </div>
   )
 }
