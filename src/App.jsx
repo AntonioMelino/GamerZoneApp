@@ -1,4 +1,5 @@
 import NavBar from "./components/layouts/navbar/NavBar";
+import ItemDetail from "./components/pages/itemDetail/ItemDetail";
 import ItemListContainer from "./components/pages/itemListContainer/ItemListContainer";
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
   return (
     <div>
       <NavBar/>
-      <ItemListContainer greeting="¡Bienvenido a nuestra tienda!"/>
+      <ItemListContainer/>
+      <ItemDetail/>
     </div>
   );
 }
