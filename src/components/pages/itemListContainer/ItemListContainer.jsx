@@ -32,6 +32,7 @@ const ItemListContainer = () => {
         justifyContent: "space-around",
         flexWrap: "wrap",
         gap: "20px",
+        marginTop : "20px",
       }}>
 
       {items.map((item) => (
