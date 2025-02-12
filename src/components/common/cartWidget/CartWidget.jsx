@@ -5,7 +5,7 @@ const CartWidget = () => {
   return (
     <div>
 
-        <Badge badgeContent={0} color="primary" showZero={true}>
+        <Badge badgeContent={4} color="primary" showZero={true}>
           <CartIcon/>
         </Badge>
 

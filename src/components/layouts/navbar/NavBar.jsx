@@ -10,13 +10,14 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-// import Avatar from '@mui/material/Avatar';
+//import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from "react-router";
 // mport { Link } from "react-router";
+import CuentaIcon from '@mui/icons-material/AccountCircle';
 
 const pages = ['PC', 'Consolas', 'Notebooks', 'Perifericos'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -139,11 +140,25 @@ const NavBar = () => {
               </Button>
             ))}
           </Box>
+              <Box 
+                  component={Link} 
+                  to="/cart"
+                  sx={{ 
+                    display: { xs: "none", md: "flex" }, 
+                    mr: 1, 
+                    color: "white", 
+                    textDecoration: "none",
+                    alignItems: "center" // Asegura que el ícono esté alineado
+                  }}
+                >
+                  <CartWidget />
+                </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                <CartWidget/>
+                {/* <CartWidget/> */}
+                <CuentaIcon/>
               </IconButton>
             </Tooltip>
             <Menu
@@ -169,6 +184,25 @@ const NavBar = () => {
               ))}
             </Menu>
           </Box>
+          {/* <Link to={"/cart"} style={{ color: "white", textDecoration: "none" }}>
+              <CartWidget sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: "white", textDecoration: "none"}} />
+            </Link> */}
+          {/* <Typography
+            variant="h6"
+            noWrap
+            component={Link}
+            to="/cart"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+          </Typography> */}
         </Toolbar>
       </Container>
     </AppBar>
