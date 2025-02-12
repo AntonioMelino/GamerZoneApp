@@ -5,8 +5,13 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { Link } from "react-router";
 
-const ProductCard = ({price, title, description, imageUrl}) => {
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('es-AR').format(price);
+};
+
+const ProductCard = ({price, title, description, imageUrl, id}) => {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
@@ -19,14 +24,16 @@ const ProductCard = ({price, title, description, imageUrl}) => {
           {title}
         </Typography>
         <Typography gutterBottom variant="h6" component="div">
-          ${price}
+          ${formatPrice(price)}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {description}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Ver detalle</Button>
+        <Link to={`/itemDetail/${id}`}>
+          <Button size="small">Ver detalle</Button>
+        </Link>
       </CardActions>
     </Card>
   )

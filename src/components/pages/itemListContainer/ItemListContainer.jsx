@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
 import { products } from "../../../products";
 import ProductCard from "../../common/productCard/ProductCard";
+import { useParams } from "react-router";
 
 const ItemListContainer = () => {
+  const {name} = useParams();
+
   const [items, setItems] = useState([]);
 
   useEffect(() => {
+    let arrayFiltrado;
+      if(name){
+        arrayFiltrado= products.filter((elemento) => elemento.category === name)
+      }
     const getProducts = new Promise((resolve, reject) => {
       let permiso = true; // Cambia a true para probar el éxito
       if (permiso) {
-        resolve(products);
+        resolve(name ? arrayFiltrado : products);
       } else {
         reject({ status: 400, message: "Algo salió mal" });
       }
@@ -22,7 +29,7 @@ const ItemListContainer = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []); // Se ejecuta solo al montar el componente
+  }, [name]); // Se ejecuta solo al montar el componente
 
   return (
     <div>

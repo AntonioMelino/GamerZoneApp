@@ -15,8 +15,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { Link } from "react-router";
+// mport { Link } from "react-router";
 
-const pages = ['PC', 'Consolas', 'Videojuegos', 'Accesorios'];
+const pages = ['PC', 'Consolas', 'Notebooks', 'Perifericos'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
@@ -45,12 +47,14 @@ const NavBar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <LogoIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <Link to={"/"}>
+              <LogoIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: "white", textDecoration: "none"}} />
+            </Link>
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -61,7 +65,7 @@ const NavBar = () => {
               textDecoration: 'none',
             }}
           >
-            GamerZoneApp
+              GamerZoneApp
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -93,7 +97,10 @@ const NavBar = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                  <Typography
+                  component={Link}
+                  to={`/category/${page}`}
+                  sx={{ textAlign: 'center' }}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -121,7 +128,11 @@ const NavBar = () => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                // onClick={handleCloseNavMenu}
+
+                component={Link}
+                to={`/category/${page}`}
+
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
