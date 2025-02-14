@@ -22,7 +22,7 @@ const ItemDetail = () => {
     }, [id]);
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345, marginTop : "20px", }}>
       <CardMedia
         sx={{ height: 140 }}
         image={item.imageUrl}
@@ -44,8 +44,3 @@ const ItemDetail = () => {
 }
 
 export default ItemDetail
-// <div>
-//     <h2>{item.title}</h2>
-//     <h4>{item.description}</h4>
-//     <Counter item={item}/>
-// </div>
