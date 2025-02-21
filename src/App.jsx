@@ -6,6 +6,7 @@ import Chekout from "./components/pages/checkout/Chekout";
 
 import { BrowserRouter , Routes , Route } from "react-router"
 import PageNotFound from "./components/pages/pageNotFound/PageNotFound";
+import CartContextProvider from "./context/CartContext";
 
 function App() {
   
@@ -13,7 +14,8 @@ function App() {
   return (
 
     <BrowserRouter>
-      <NavBar/>
+      <CartContextProvider>
+        <NavBar/>
         <Routes>
           <Route path="/" element={<ItemListContainer/>}/>
           <Route path="/category/:name" element={<ItemListContainer/>}/>
@@ -22,6 +24,7 @@ function App() {
           <Route path="/checkout" element={<Chekout/>}/>
           <Route path="*" element={<PageNotFound/>}/>
         </Routes>
+      </CartContextProvider>
     </BrowserRouter>
 
 
