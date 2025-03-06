@@ -26,12 +26,10 @@ const Chekout = () => {
 
     let refCollection = collection(db, "orders");
     const promiseResponse = addDoc(refCollection, order);
-    promiseResponse
-      .then((res) => {
-        setOrderId(res.id);
-        resetCart();
-      })
-      .catch((error) => console.log({ error }));
+    promiseResponse.then((res) => {
+      setOrderId(res.id);
+      resetCart();
+    });
 
     let productsCollection = collection(db, "products");
     order.items.forEach((item) => {

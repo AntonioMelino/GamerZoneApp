@@ -83,26 +83,3 @@ const ItemListContainer = () => {
 };
 
 export default ItemListContainer;
-
-//DENTRO DEL USE EFFECT
-
-// let arrayFiltrado;
-// if (name) {
-//   arrayFiltrado = products.filter((elemento) => elemento.category === name);
-// }
-// const getProducts = new Promise((resolve, reject) => {
-//   let permiso = true; // Cambia a true para probar el éxito
-//   if (permiso) {
-//     resolve(name ? arrayFiltrado : products);
-//   } else {
-//     reject({ status: 400, message: "Algo salió mal" });
-//   }
-// });
-
-// getProducts
-//   .then((res) => {
-//     setItems(res);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
