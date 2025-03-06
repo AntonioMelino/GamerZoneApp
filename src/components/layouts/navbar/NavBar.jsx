@@ -1,30 +1,25 @@
-import CartWidget from "../../common/cartWidget/CartWidget"
-import LogoIcon from '@mui/icons-material/SportsEsports';
-
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-//import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import CartWidget from "../../common/cartWidget/CartWidget";
+import LogoIcon from "@mui/icons-material/SportsEsports";
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router";
-// mport { Link } from "react-router";
-import CuentaIcon from '@mui/icons-material/AccountCircle';
+import CuentaIcon from "@mui/icons-material/AccountCircle";
 
-const pages = ['PC', 'Consolas', 'Notebooks', 'Perifericos'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
+const pages = ["PC", "Consolas", "Notebooks", "Perifericos"];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const NavBar = () => {
-
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -44,13 +39,19 @@ const NavBar = () => {
   };
 
   return (
-
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-            <Link to={"/"}>
-              <LogoIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: "white", textDecoration: "none"}} />
-            </Link>
+          <Link to={"/"}>
+            <LogoIcon
+              sx={{
+                display: { xs: "none", md: "flex" },
+                mr: 1,
+                color: "white",
+                textDecoration: "none",
+              }}
+            />
+          </Link>
           <Typography
             variant="h6"
             noWrap
@@ -58,18 +59,18 @@ const NavBar = () => {
             to="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
-              GamerZoneApp
+            GamerZoneApp
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -84,29 +85,32 @@ const NavBar = () => {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
+              sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography
-                  component={Link}
-                  to={`/category/${page}`}
-                  sx={{ textAlign: 'center' }}>{page}</Typography>
+                    component={Link}
+                    to={`/category/${page}`}
+                    sx={{ textAlign: "center" }}
+                  >
+                    {page}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -114,18 +118,18 @@ const NavBar = () => {
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             LOGO
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
@@ -133,140 +137,62 @@ const NavBar = () => {
 
                 component={Link}
                 to={`/category/${page}`}
-
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
             ))}
           </Box>
-              <Box 
-                  component={Link} 
-                  to="/cart"
-                  sx={{ 
-                    display: { xs: "none", md: "flex" }, 
-                    mr: 1, 
-                    color: "white", 
-                    textDecoration: "none",
-                    alignItems: "center" // Asegura que el ícono esté alineado
-                  }}
-                >
-                  <CartWidget />
-                </Box>
+          <Box
+            component={Link}
+            to="/cart"
+            sx={{
+              display: { xs: "none", md: "flex" },
+              mr: 1,
+              color: "white",
+              textDecoration: "none",
+              alignItems: "center", // Asegura que el ícono esté alineado
+            }}
+          >
+            <CartWidget />
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
                 {/* <CartWidget/> */}
-                <CuentaIcon/>
+                <CuentaIcon />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                  <Typography sx={{ textAlign: "center" }}>
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          {/* <Link to={"/cart"} style={{ color: "white", textDecoration: "none" }}>
-              <CartWidget sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: "white", textDecoration: "none"}} />
-            </Link> */}
-          {/* <Typography
-            variant="h6"
-            noWrap
-            component={Link}
-            to="/cart"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-          </Typography> */}
         </Toolbar>
       </Container>
     </AppBar>
+  );
+};
 
-  )
-}
-
-export default NavBar
-
-
-
-
-// import CartWidget from "../../common/cartWidget/CartWidget"
-// import LogoIcon from '@mui/icons-material/SportsEsports';
-
-
-// const NavBar = () => {
-//   return (
-
-//     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-//       <div className="container">
-//         <LogoIcon/>
-//         <a className="navbar-brand" href="#">
-//           GameZoneApp
-//         </a>
-//         <button
-//           className="navbar-toggler"
-//           type="button"
-//           data-bs-toggle="collapse"
-//           data-bs-target="#navbarNav"
-//           aria-controls="navbarNav"
-//           aria-expanded="false"
-//           aria-label="Toggle navigation"
-//         >
-//           <span className="navbar-toggler-icon"></span>
-//         </button>
-//         <div className="collapse navbar-collapse" id="navbarNav">
-//           <ul className="navbar-nav">
-//             <li className="nav-item">
-//               <a className="nav-link" href="#pc">
-//                 PC
-//               </a>
-//             </li>
-//             <li className="nav-item">
-//               <a className="nav-link" href="#consolas">
-//                 Consolas
-//               </a>
-//             </li>
-//             <li className="nav-item">
-//               <a className="nav-link" href="#videojuegos">
-//                 Videojuegos
-//               </a>
-//             </li>
-//             <li className="nav-item">
-//               <a className="nav-link" href="#accesorios">
-//                 Accesorios
-//               </a>
-//             </li>
-//           </ul>
-//         </div>
-//       <CartWidget/>
-//       </div>
-//     </nav>
-//   )
-// }
-
-// export default NavBar
+export default NavBar;

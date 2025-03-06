@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAoQuoNYCEEAB6QMtu4zzX3k222FwYIhp8",
-  authDomain: "gamerzoneapp-49b95.firebaseapp.com",
-  projectId: "gamerzoneapp-49b95",
-  storageBucket: "gamerzoneapp-49b95.firebasestorage.app",
-  messagingSenderId: "953698137613",
-  appId: "1:953698137613:web:b1cd34a4dee3dbf5370744",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROYECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);

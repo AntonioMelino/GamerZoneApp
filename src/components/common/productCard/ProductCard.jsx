@@ -1,24 +1,20 @@
-import "./productCard.css"
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import "./productCard.css";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { Link } from "react-router";
 
 const formatPrice = (price) => {
-  return new Intl.NumberFormat('es-AR').format(price);
+  return new Intl.NumberFormat("es-AR").format(price);
 };
 
-const ProductCard = ({price, title, description, imageUrl, id}) => {
+const ProductCard = ({ price, title, description, imageUrl, id }) => {
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardMedia
-        sx={{ height: 140 }}
-        image={imageUrl}
-        title="green iguana"
-      />
+      <CardMedia sx={{ height: 140 }} image={imageUrl} title={title} />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {title}
@@ -26,7 +22,7 @@ const ProductCard = ({price, title, description, imageUrl, id}) => {
         <Typography gutterBottom variant="h6" component="div">
           ${formatPrice(price)}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {description}
         </Typography>
       </CardContent>
@@ -36,10 +32,10 @@ const ProductCard = ({price, title, description, imageUrl, id}) => {
         </Link>
       </CardActions>
     </Card>
-  )
-}
+  );
+};
 
-export default ProductCard
+export default ProductCard;
 // <div className='container-product'>
 //     <img className='image' src={imageUrl} alt="" />
 //     <h2>{title}</h2>
