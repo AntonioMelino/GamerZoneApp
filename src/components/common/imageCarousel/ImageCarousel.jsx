@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./ImageCarousel.css"; // Archivo de estilos
 
 const ImageCarousel = ({ images }) => {
@@ -15,6 +15,16 @@ const ImageCarousel = ({ images }) => {
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
+
+  // Autoplay: Cambia de imagen cada 3 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 3000); // Cambia de imagen cada 3 segundos (3000 ms)
+
+    // Limpia el intervalo cuando el componente se desmonta
+    return () => clearInterval(interval);
+  }); // Dependencia: currentIndex
 
   return (
     <div className="carousel-container">
