@@ -2,7 +2,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  margin-top: 20px; /* Ajusta según la altura del navbar */
+  margin-top: 80px; /* Ajusta según la altura del navbar */
 }
 
 .carousel-slide {

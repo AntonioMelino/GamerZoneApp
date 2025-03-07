@@ -16,7 +16,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router";
 import CuentaIcon from "@mui/icons-material/AccountCircle";
 
-const pages = ["PC", "Consolas", "Notebooks", "Perifericos"];
+const pages = ["Todos", "PC", "Consolas", "Notebooks", "Perifericos"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const NavBar = () => {
@@ -39,7 +39,10 @@ const NavBar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="fixed" // Hace que el NavBar esté fijo en la parte superior
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} // Asegura que esté por encima de otros elementos
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to={"/"}>
@@ -101,7 +104,7 @@ const NavBar = () => {
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography
                     component={Link}
-                    to={`/category/${page}`}
+                    to={page === "Todos" ? "/" : `/category/${page}`}
                     sx={{ textAlign: "center" }}
                   >
                     {page}

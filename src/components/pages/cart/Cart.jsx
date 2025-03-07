@@ -27,7 +27,7 @@ const Cart = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "75px" }}>
       {cart.map((elemento) => {
         return (
           <div
