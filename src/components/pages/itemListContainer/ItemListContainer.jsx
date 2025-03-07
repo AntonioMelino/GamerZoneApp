@@ -6,6 +6,7 @@ import ProductSkeleton from "../../common/productSkeleton/ProductSkeleton";
 import { db } from "../../../firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import ImageCarousel from "../../common/imageCarousel/ImageCarousel";
+//import { products } from "../../../products";
 
 const images = [
   "https://res.cloudinary.com/dhwsxp2c8/image/upload/v1741310377/165_ln6rel.jpg",
@@ -50,11 +51,19 @@ const ItemListContainer = () => {
       });
   }, [name]);
 
+  // const rellenar = () => {
+  //   let productsCollection = collection(db, "products");
+
+  //   products.forEach((product) => {
+  //     addDoc(productsCollection, product);
+  //   });
+  // };
+
   return (
     <div style={{ marginTop: "64px" }}>
       {/* Carrusel de imágenes: Solo se muestra si no hay categoría seleccionada */}
       {!name && <ImageCarousel images={images} />}
-
+      {/* <button onClick={rellenar}>Rellenar db</button> */}
       {/* Lista de productos */}
       {loading ? (
         <Grid

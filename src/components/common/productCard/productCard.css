@@ -1,4 +1,21 @@
-.image{
+/* Estilos para la imagen */
+.image {
+  width: 100%;
+  height: 200px; /* Altura fija para la imagen */
+  object-fit: cover; /* Ajusta la imagen al contenedor */
+}
+
+/* Estilos para el contenedor de la carta */
+.container-product {
+  width: 300px; /* Ancho fijo para la carta */
+  height: auto; /* Altura automática para el contenido */
+  background-color: steelblue;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+}
+
+/* .image{
     width: 100%;
 }
 
@@ -7,4 +24,4 @@
     height: auto;
     background-color: steelblue;
     border: 2px solid black;
-}
+} */

@@ -41,6 +41,7 @@ const ItemDetail = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        marginTop: "64px",
       }}
     >
       <Card sx={{ maxWidth: 600, marginTop: "20px", padding: "20px" }}>
