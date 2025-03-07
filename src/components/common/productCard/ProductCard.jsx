@@ -11,7 +11,7 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat("es-AR").format(price);
 };
 
-const ProductCard = ({ price, title, description, imageUrl, id }) => {
+const ProductCard = ({ price, title, imageUrl, id }) => {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia sx={{ height: 140 }} image={imageUrl} title={title} />
@@ -22,9 +22,9 @@ const ProductCard = ({ price, title, description, imageUrl, id }) => {
         <Typography gutterBottom variant="h6" component="div">
           ${formatPrice(price)}
         </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        {/* <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {description}
-        </Typography>
+        </Typography> */}
       </CardContent>
       <CardActions>
         <Link to={`/itemDetail/${id}`}>
