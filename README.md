@@ -14,7 +14,8 @@
 
 ## Demostración
 
-C:\Users\antonio\Desktop\React-proyect\src\assets\gifProyectReact.gif
+![gifProyectReact1](https://github.com/user-attachments/assets/e7b6d346-80b3-4e0a-bf57-bc5aa7b9d585)
+
 
 ## Tecnologías utilizadas
 
