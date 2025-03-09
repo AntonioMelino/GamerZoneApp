@@ -14,7 +14,7 @@
 
 ## Demostración
 
-![Demo de Gamer Zone App](./assets/gifProyectReact.gif)
+![gifProyectReact1](https://github.com/user-attachments/assets/040234d0-c0a5-4bff-ac7d-22db78473c31)
 
 ## Tecnologías utilizadas
 
