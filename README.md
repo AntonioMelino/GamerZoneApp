@@ -14,8 +14,6 @@
 
 ## Demostración
 
-![Demo de Gamer Zone App](./assets/gifProyectReact.gif)
-
 ## Tecnologías utilizadas
 
 - **React**: Biblioteca de JavaScript para construir la interfaz de usuario.
