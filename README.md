@@ -14,7 +14,7 @@
 
 ## Demostración
 
-![Demo de Gamer Zone App](./assets/gifProyectReact.gif)
+C:\Users\antonio\Desktop\React-proyect\src\assets\gifProyectReact.gif
 
 ## Tecnologías utilizadas
 
