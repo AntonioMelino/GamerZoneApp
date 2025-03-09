@@ -14,6 +14,8 @@
 
 ## Demostración
 
+![gifProyectReact1](https://github.com/user-attachments/assets/e7b6d346-80b3-4e0a-bf57-bc5aa7b9d585)
+
 ## Tecnologías utilizadas
 
 - **React**: Biblioteca de JavaScript para construir la interfaz de usuario.
