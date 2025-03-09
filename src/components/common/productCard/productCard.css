@@ -15,13 +15,8 @@
   flex-direction: column;
 }
 
-/* .image{
-    width: 100%;
+/* Estilos adicionales para la card */
+.card:hover {
+  transform: scale(1.02); /* Efecto de escala al hacer hover */
+  transition: transform 0.3s ease; /* Transición suave */
 }
-
-.container-product{
-    width: 400px;
-    height: auto;
-    background-color: steelblue;
-    border: 2px solid black;
-} */
