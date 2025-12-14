@@ -1,14 +1,18 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Counter from "../../common/counter/Counter";
 import { useParams } from "react-router";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-//import Button from "@mui/material/Button";
 import { db } from "../../../firebaseConfig";
 import { collection, doc, getDoc } from "firebase/firestore";
+import "./ItemDetail.css";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
 
 const formatPrice = (price) => {
   return new Intl.NumberFormat("es-AR", {
@@ -20,65 +24,84 @@ const formatPrice = (price) => {
 const ItemDetail = () => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    let productColecction = collection(db, "products");
-    let refDoc = doc(productColecction, id);
+    const productColecction = collection(db, "products");
+    const refDoc = doc(productColecction, id);
     const getProduct = getDoc(refDoc);
     getProduct.then((res) => {
       setItem({ id: res.id, ...res.data() });
     });
   }, [id]);
 
+  const handleImageError = () => {
+    console.log("[v0] Error cargando imagen en ItemDetail, usando placeholder");
+    setImageError(true);
+  };
+
   if (!item) {
-    return <div>Cargando...</div>;
+    return <div className="loading-state">Cargando producto...</div>;
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        marginTop: "64px",
-      }}
-    >
-      <Card sx={{ maxWidth: 600, marginTop: "20px", padding: "20px" }}>
-        {item.imageUrl && (
-          <CardMedia
-            sx={{ height: 300, backgroundSize: "contain" }}
-            image={item.imageUrl}
-            title={item.title}
+    <div className="item-detail-container">
+      <Card className="item-detail-card">
+        <div className="item-detail-image-container">
+          <img
+            className="item-detail-image"
+            src={
+              imageError
+                ? "/placeholder.svg?height=400&width=400&query=producto"
+                : item.imageUrl
+            }
+            alt={item.title}
+            onError={handleImageError}
           />
-        )}
-        <CardContent>
-          <Typography gutterBottom variant="h4" component="div">
+        </div>
+        <CardContent className="item-detail-content">
+          <Typography
+            className="item-detail-title"
+            gutterBottom
+            variant="h4"
+            component="div"
+          >
             {item.title}
           </Typography>
-          <Typography gutterBottom variant="h5" component="div" color="primary">
+          <Typography
+            className="item-detail-price"
+            gutterBottom
+            variant="h5"
+            component="div"
+          >
             {formatPrice(item.price)}
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{ color: "text.secondary", marginBottom: "20px" }}
-          >
+          <Typography className="item-detail-description" variant="body1">
             {item.description}
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "green", marginBottom: "10px" }}
-          >
-            Envío GRATIS
-          </Typography>
-          <Typography variant="body2" sx={{ marginBottom: "10px" }}>
-            Garantía Oficial 12 meses
-          </Typography>
-          <Typography variant="body2" sx={{ marginBottom: "20px" }}>
-            ¡12 cuotas sin interés!
-          </Typography>
+
+          <div className="item-detail-features">
+            <div className="item-detail-feature">
+              <LocalShippingIcon className="item-detail-feature-icon" />
+              <Typography className="item-detail-feature-text" variant="body2">
+                Envío GRATIS
+              </Typography>
+            </div>
+            <div className="item-detail-feature">
+              <VerifiedIcon className="item-detail-feature-icon" />
+              <Typography className="item-detail-feature-text" variant="body2">
+                Garantía Oficial 12 meses
+              </Typography>
+            </div>
+            <div className="item-detail-feature">
+              <CreditCardIcon className="item-detail-feature-icon" />
+              <Typography className="item-detail-feature-text" variant="body2">
+                ¡12 cuotas sin interés!
+              </Typography>
+            </div>
+          </div>
         </CardContent>
-        <CardActions>
+        <CardActions className="item-detail-actions">
           <Counter item={item} />
         </CardActions>
       </Card>
