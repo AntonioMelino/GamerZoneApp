@@ -1,9 +1,12 @@
+"use client";
+
 import { useContext, useState } from "react";
 import { CartContext } from "../../../context/CartContext";
 import { db } from "../../../firebaseConfig";
 import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
-import { Button, TextField, Typography, Box, Grid, Alert } from "@mui/material"; // Importar componentes de Material-UI
-import { Link } from "react-router"; // Para redireccionar
+import { Button, TextField, Typography, Box, Grid, Alert } from "@mui/material";
+import { Link } from "react-router";
+import "./Chekout.css";
 
 // Función para formatear el precio
 const formatPrice = (price) => {
@@ -19,7 +22,7 @@ const Checkout = () => {
     telefono: "",
   });
   const [orderId, setOrderId] = useState(null);
-  const [error, setError] = useState(null); // Estado para manejar errores
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (evento) => {
     evento.preventDefault();
@@ -38,30 +41,30 @@ const Checkout = () => {
     }
 
     // Validación de teléfono
-    const phoneRegex = /^\d{10}$/; // Ajusta según el formato de teléfono que necesites
+    const phoneRegex = /^\d{10}$/;
     if (!phoneRegex.test(user.telefono)) {
       setError("Por favor, ingresa un teléfono válido (10 dígitos).");
       return;
     }
 
     try {
-      let total = getTotalAmount();
-      let order = {
+      const total = getTotalAmount();
+      const order = {
         buyer: user,
         items: cart,
         total: total,
       };
 
       // Guardar la orden en Firestore
-      let refCollection = collection(db, "orders");
+      const refCollection = collection(db, "orders");
       const res = await addDoc(refCollection, order);
       setOrderId(res.id);
       resetCart();
 
       // Actualizar el stock de los productos
-      let productsCollection = collection(db, "products");
+      const productsCollection = collection(db, "products");
       order.items.forEach(async (item) => {
-        let productRef = doc(productsCollection, item.id);
+        const productRef = doc(productsCollection, item.id);
         await updateDoc(productRef, { stock: item.stock - item.quantity });
       });
     } catch (error) {
@@ -75,113 +78,170 @@ const Checkout = () => {
   const handleChange = (evento) => {
     const { value, name } = evento.target;
     setUser({ ...user, [name]: value });
-    setError(null); // Limpiar errores al cambiar los campos
+    setError(null);
   };
 
   return (
-    <div style={{ marginTop: "70px", padding: "20px" }}>
+    <div className="checkout-container">
       {orderId ? (
-        <Box textAlign="center">
-          <Typography variant="h4" gutterBottom>
+        <Box className="checkout-success">
+          <Typography
+            className="checkout-success-title"
+            variant="h4"
+            gutterBottom
+          >
             ¡Gracias por tu compra!
           </Typography>
-          <Typography variant="h6">
-            Tu número de orden es: <strong>{orderId}</strong>
+          <Typography className="checkout-order-id" variant="h6">
+            Tu número de orden es:
+            <div className="checkout-order-number">{orderId}</div>
           </Typography>
           <Button
+            className="checkout-back-button"
             variant="contained"
             color="primary"
             component={Link}
             to="/"
-            sx={{ mt: 3 }}
           >
             Volver al inicio
           </Button>
         </Box>
       ) : (
-        <Grid container spacing={3} justifyContent="center">
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          className="checkout-grid"
+        >
           {/* Resumen de la compra */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h5" gutterBottom>
-              Resumen de la compra
-            </Typography>
-            {cart.map((item) => (
-              <Box key={item.id} mb={2}>
-                <Typography variant="body1">
-                  {item.title} - {item.quantity} x ${formatPrice(item.price)}
-                </Typography>
+            <div className="checkout-section">
+              <Typography
+                className="checkout-section-title"
+                variant="h5"
+                gutterBottom
+              >
+                Resumen de la compra
+              </Typography>
+              {cart.map((item) => (
+                <Box key={item.id} className="checkout-summary-item">
+                  <Box>
+                    <Typography
+                      className="checkout-summary-text"
+                      variant="body1"
+                      sx={{ fontWeight: 600 }}
+                    >
+                      {item.title}
+                    </Typography>
+                    <Typography
+                      className="checkout-summary-text"
+                      variant="body2"
+                    >
+                      Cantidad: {item.quantity}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    className="checkout-summary-price"
+                    variant="body1"
+                  >
+                    ${formatPrice(item.price * item.quantity)}
+                  </Typography>
+                </Box>
+              ))}
+              <Box className="checkout-total">
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography className="checkout-total-text" variant="h6">
+                    Total:
+                  </Typography>
+                  <Typography className="checkout-total-amount" variant="h6">
+                    ${formatPrice(getTotalAmount())}
+                  </Typography>
+                </Box>
               </Box>
-            ))}
-            <Typography variant="h6">
-              Total: ${formatPrice(getTotalAmount())}
-            </Typography>
+            </div>
           </Grid>
 
           {/* Formulario de checkout */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h5" gutterBottom>
-              Completa tus datos
-            </Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                fullWidth
-                label="Nombre"
-                name="nombre"
-                value={user.nombre}
-                onChange={handleChange}
-                margin="normal"
-                required
-              />
-              <TextField
-                fullWidth
-                label="Apellido"
-                name="apellido"
-                value={user.apellido}
-                onChange={handleChange}
-                margin="normal"
-                required
-              />
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                type="email"
-                value={user.email}
-                onChange={handleChange}
-                margin="normal"
-                required
-              />
-              <TextField
-                fullWidth
-                label="Teléfono"
-                name="telefono"
-                value={user.telefono}
-                onChange={handleChange}
-                margin="normal"
-                required
-              />
+            <div className="checkout-section">
+              <Typography
+                className="checkout-section-title"
+                variant="h5"
+                gutterBottom
+              >
+                Completa tus datos
+              </Typography>
+              <form onSubmit={handleSubmit} className="checkout-form">
+                <TextField
+                  className="checkout-input"
+                  fullWidth
+                  label="Nombre"
+                  name="nombre"
+                  value={user.nombre}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  className="checkout-input"
+                  fullWidth
+                  label="Apellido"
+                  name="apellido"
+                  value={user.apellido}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  className="checkout-input"
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={user.email}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  className="checkout-input"
+                  fullWidth
+                  label="Teléfono"
+                  name="telefono"
+                  value={user.telefono}
+                  onChange={handleChange}
+                  required
+                />
 
-              {error && (
-                <Alert severity="error" sx={{ mt: 2 }}>
-                  {error}
-                </Alert>
-              )}
+                {error && (
+                  <Alert severity="error" className="checkout-error">
+                    {error}
+                  </Alert>
+                )}
 
-              <Box mt={3} display="flex" gap={2}>
-                <Button type="submit" variant="contained" color="primary">
-                  Comprar
-                </Button>
-                <Button
-                  type="button"
-                  variant="outlined"
-                  color="secondary"
-                  component={Link}
-                  to="/cart"
-                >
-                  Cancelar
-                </Button>
-              </Box>
-            </form>
+                <Box className="checkout-actions">
+                  <Button
+                    className="checkout-button checkout-button-primary"
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                  >
+                    Confirmar compra
+                  </Button>
+                  <Button
+                    className="checkout-button checkout-button-cancel"
+                    type="button"
+                    variant="outlined"
+                    color="secondary"
+                    component={Link}
+                    to="/cart"
+                  >
+                    Cancelar
+                  </Button>
+                </Box>
+              </form>
+            </div>
           </Grid>
         </Grid>
       )}
