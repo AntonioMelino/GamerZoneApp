@@ -1,0 +1,22 @@
+.product-skeleton {
+  width: 100%;
+  max-width: 300px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  box-shadow: var(--shadow-md);
+}
+
+.product-skeleton .MuiSkeleton-root {
+  background-color: var(--bg-hover);
+}
+
+.product-skeleton .MuiSkeleton-root::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(99, 102, 241, 0.1),
+    transparent
+  );
+}

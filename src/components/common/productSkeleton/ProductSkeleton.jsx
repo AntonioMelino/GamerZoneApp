@@ -1,10 +1,20 @@
 import { Skeleton, Stack } from "@mui/material";
+import "./ProductSkeleton.css";
 
 const ProductSkeleton = () => {
   return (
-    <Stack spacing={1} sx={{ width: "100%", maxWidth: "300px" }}>
+    <Stack
+      spacing={1}
+      className="product-skeleton"
+      sx={{ width: "100%", maxWidth: "300px" }}
+    >
       {/* Imagen del producto */}
-      <Skeleton variant="rectangular" width="100%" height={200} />
+      <Skeleton
+        variant="rectangular"
+        width="100%"
+        height={220}
+        sx={{ borderRadius: "8px" }}
+      />
 
       {/* Título del producto */}
       <Skeleton
@@ -18,12 +28,17 @@ const ProductSkeleton = () => {
       <Skeleton
         variant="text"
         width="60%"
-        height={25}
+        height={35}
         sx={{ fontSize: "1.2rem" }}
       />
 
       {/* Botón de acción */}
-      <Skeleton variant="rectangular" width="100%" height={40} />
+      <Skeleton
+        variant="rectangular"
+        width="100%"
+        height={40}
+        sx={{ borderRadius: "8px", marginTop: "0.5rem" }}
+      />
     </Stack>
   );
 };
