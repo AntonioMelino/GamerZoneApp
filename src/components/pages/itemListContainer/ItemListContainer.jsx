@@ -1,12 +1,16 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import ProductCard from "../../common/productCard/ProductCard";
 import { useParams } from "react-router";
-import { Grid } from "@mui/material"; // Importamos Grid de MUI
+import { Grid } from "@mui/material";
 import ProductSkeleton from "../../common/productSkeleton/ProductSkeleton";
 import { db } from "../../../firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import ImageCarousel from "../../common/imageCarousel/ImageCarousel";
-//import { products } from "../../../products";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import "./ItemListContainer.css";
 
 const images = [
   "https://res.cloudinary.com/dhwsxp2c8/image/upload/v1741310377/165_ln6rel.jpg",
@@ -22,13 +26,18 @@ const images = [
 const ItemListContainer = () => {
   const { name } = useParams();
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado para manejar la carga
+  const [loading, setLoading] = useState(true);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
 
   useEffect(() => {
+    setCurrentPage(1);
+    setLoading(true);
+
     const coleccionDeProductos = collection(db, "products");
     let consulta = coleccionDeProductos;
 
-    // Solo aplica el filtro si `name` tiene un valor
     if (name && name !== "Todos") {
       const coleccionFiltrada = query(
         coleccionDeProductos,
@@ -41,74 +50,158 @@ const ItemListContainer = () => {
 
     getProducts
       .then((res) => {
-        let newArray = res.docs.map((elemento) => {
+        const newArray = res.docs.map((elemento) => {
           return { id: elemento.id, ...elemento.data() };
         });
         setItems(newArray);
       })
       .finally(() => {
-        setLoading(false); // Finaliza la carga
+        setLoading(false);
       });
   }, [name]);
 
-  // const rellenar = () => {
-  //   let productsCollection = collection(db, "products");
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
 
-  //   products.forEach((product) => {
-  //     addDoc(productsCollection, product);
-  //   });
-  // };
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
 
   return (
-    <div style={{ marginTop: "64px" }}>
+    <div className="item-list-container">
       {/* Carrusel de imágenes: Solo se muestra si no hay categoría seleccionada */}
       {!name && <ImageCarousel images={images} />}
-      {/* <button onClick={rellenar}>Rellenar db</button> */}
+
+      {name && (
+        <div className="category-header">
+          <h1 className="category-title">{name}</h1>
+          <p className="category-subtitle">
+            Descubre los mejores productos en {name}
+          </p>
+        </div>
+      )}
+
+      {!loading && items.length > 0 && (
+        <div className="items-per-page-selector">
+          <label>Productos por página:</label>
+          <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
+            <option value={6}>6</option>
+            <option value={9}>9</option>
+            <option value={12}>12</option>
+            <option value={18}>18</option>
+          </select>
+        </div>
+      )}
+
       {/* Lista de productos */}
       {loading ? (
         <Grid
           container
-          spacing={3} // Espacio entre los productos
+          spacing={3}
           sx={{
             padding: "20px",
-            maxWidth: "1200px", // Ancho máximo del contenedor
-            margin: "0 auto", // Centra el contenedor
+            maxWidth: "1400px",
+            margin: "0 auto",
           }}
         >
-          {[...Array(3)].map((_, index) => (
-            <Grid
-              item
-              key={index}
-              xs={12} // 1 columna en móvil
-              sm={6} // 2 columnas en tablet
-              md={4} // 3 columnas en desktop
-            >
+          {[...Array(6)].map((_, index) => (
+            <Grid item key={index} xs={12} sm={6} md={4}>
               <ProductSkeleton />
             </Grid>
           ))}
         </Grid>
       ) : (
-        <Grid
-          container
-          spacing={3} // Espacio entre los productos
-          sx={{
-            padding: "20px",
-            maxWidth: "1200px", // Ancho máximo del contenedor
-            margin: "0 auto", // Centra el contenedor
-          }}
-        >
-          {items.map((item) => (
-            <Grid
-              item
-              key={item.id}
-              xs={12} // 1 columna en móvil
-              sm={6} // 2 columnas en tablet
-              md={4} // 3 columnas en desktop
-            >
-              <ProductCard {...item} />
-            </Grid>
-          ))}
-        </Grid>
+        <>
+          <Grid
+            container
+            spacing={3}
+            sx={{
+              padding: "20px",
+              maxWidth: "1400px",
+              margin: "0 auto",
+            }}
+          >
+            {currentItems.map((item) => (
+              <Grid item key={item.id} xs={12} sm={6} md={4}>
+                <ProductCard {...item} />
+              </Grid>
+            ))}
+          </Grid>
+
+          {totalPages > 1 && (
+            <div className="pagination-container">
+              <button
+                className="pagination-button"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeftIcon />
+                Anterior
+              </button>
+
+              <div className="pagination-buttons">
+                {[...Array(totalPages)].map((_, index) => {
+                  const pageNumber = index + 1;
+                  // Mostrar solo algunas páginas alrededor de la actual
+                  if (
+                    pageNumber === 1 ||
+                    pageNumber === totalPages ||
+                    (pageNumber >= currentPage - 1 &&
+                      pageNumber <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={pageNumber}
+                        className={`pagination-button pagination-number ${
+                          currentPage === pageNumber ? "active" : ""
+                        }`}
+                        onClick={() => handlePageChange(pageNumber)}
+                      >
+                        {pageNumber}
+                      </button>
+                    );
+                  } else if (
+                    pageNumber === currentPage - 2 ||
+                    pageNumber === currentPage + 2
+                  ) {
+                    return (
+                      <span
+                        key={pageNumber}
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+
+              <button
+                className="pagination-button"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Siguiente
+                <ChevronRightIcon />
+              </button>
+            </div>
+          )}
+
+          <div className="pagination-info">
+            Mostrando {indexOfFirstItem + 1} -{" "}
+            {Math.min(indexOfLastItem, items.length)} de {items.length}{" "}
+            productos
+          </div>
+        </>
       )}
     </div>
   );
