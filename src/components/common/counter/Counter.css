@@ -1,0 +1,101 @@
+.counter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+.counter-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.counter-button {
+  min-width: 45px !important;
+  height: 45px !important;
+  border-radius: 50% !important;
+  background: var(--bg-hover) !important;
+  border: 2px solid var(--primary-color) !important;
+  color: var(--primary-color) !important;
+  transition: all var(--transition-base) !important;
+}
+
+.counter-button:hover:not(:disabled) {
+  background: var(--primary-color) !important;
+  color: white !important;
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.counter-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: var(--border-color) !important;
+  color: var(--text-muted) !important;
+}
+
+.counter-value {
+  min-width: 60px;
+  text-align: center;
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  color: var(--primary-light) !important;
+}
+
+.counter-add-button {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  ) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  padding: 0.875rem 2rem !important;
+  border-radius: var(--radius-lg) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05rem !important;
+  font-size: 1rem !important;
+  transition: all var(--transition-base) !important;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.counter-add-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    var(--primary-light),
+    var(--secondary-color)
+  );
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.counter-add-button:hover::before {
+  opacity: 1;
+}
+
+.counter-add-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+}
+
+.counter-add-button:active {
+  transform: translateY(-1px);
+}
+
+.counter-add-button .MuiButton-startIcon,
+.counter-add-button span {
+  position: relative;
+  z-index: 1;
+}
