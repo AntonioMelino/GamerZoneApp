@@ -20,7 +20,7 @@ import CuentaIcon from "@mui/icons-material/AccountCircle";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useTheme } from "../../../context/ThemeContext";
-import "./NavBar.css";
+import "./Navbar.css";
 
 const pages = ["Todos", "PC", "Consolas", "Notebooks", "Perifericos"];
 
