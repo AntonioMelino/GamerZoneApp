@@ -1,0 +1,124 @@
+/* Adaptando navbar para tema oscuro/claro */
+.navbar-custom {
+  background: var(--navbar-bg) !important;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-md);
+  border-bottom: 1px solid var(--border-color);
+  transition: all var(--transition-base);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: transform var(--transition-base);
+}
+
+.navbar-logo:hover {
+  transform: translateY(-2px);
+}
+
+.navbar-logo-icon {
+  color: var(--primary-color) !important;
+  font-size: 2rem !important;
+  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
+  transition: all var(--transition-base);
+}
+
+.navbar-logo-icon:hover {
+  transform: rotate(15deg);
+}
+
+.navbar-title {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-light) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800 !important;
+  letter-spacing: 0.1rem !important;
+}
+
+.navbar-menu-button {
+  color: var(--text-primary) !important;
+  transition: all var(--transition-base) !important;
+}
+
+.navbar-menu-button:hover {
+  background: var(--bg-hover) !important;
+  transform: scale(1.05);
+}
+
+.navbar-category-button {
+  color: var(--text-secondary) !important;
+  font-weight: 600 !important;
+  position: relative;
+  transition: all var(--transition-base) !important;
+  padding: 8px 16px !important;
+  border-radius: var(--radius-md);
+}
+
+.navbar-category-button:hover {
+  color: var(--primary-light) !important;
+  background: var(--bg-hover) !important;
+  transform: translateY(-2px);
+}
+
+.navbar-category-button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 100%
+  );
+  border-radius: var(--radius-sm);
+  transition: transform var(--transition-base);
+}
+
+.navbar-category-button:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.navbar-account-icon {
+  color: var(--text-primary) !important;
+  font-size: 2rem !important;
+  transition: all var(--transition-base) !important;
+}
+
+.navbar-account-icon:hover {
+  color: var(--primary-light) !important;
+  transform: scale(1.1) rotate(10deg);
+}
+
+/* Nuevo botón de toggle de tema */
+.theme-toggle-button {
+  color: var(--text-primary) !important;
+  background: var(--bg-hover) !important;
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all var(--transition-base) !important;
+  margin-right: 12px !important;
+}
+
+.theme-toggle-button:hover {
+  background: var(--primary-color) !important;
+  transform: rotate(180deg) scale(1.1);
+  box-shadow: var(--shadow-glow);
+}
+
+.theme-icon {
+  font-size: 1.5rem !important;
+}

@@ -1,3 +1,5 @@
+"use client";
+
 import CartWidget from "../../common/cartWidget/CartWidget";
 import LogoIcon from "@mui/icons-material/SportsEsports";
 import * as React from "react";
@@ -15,11 +17,15 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router";
 import CuentaIcon from "@mui/icons-material/AccountCircle";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import { useTheme } from "../../../context/ThemeContext";
+import "./NavBar.css";
 
 const pages = ["Todos", "PC", "Consolas", "Notebooks", "Perifericos"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const NavBar = () => {
+  const { theme, toggleTheme } = useTheme();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -40,18 +46,18 @@ const NavBar = () => {
 
   return (
     <AppBar
-      position="fixed" // Hace que el NavBar esté fijo en la parte superior
-      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} // Asegura que esté por encima de otros elementos
+      position="fixed"
+      className="navbar-custom"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Link to={"/"}>
+          <Link to={"/"} className="navbar-logo">
             <LogoIcon
+              className="navbar-logo-icon"
               sx={{
                 display: { xs: "none", md: "flex" },
                 mr: 1,
-                color: "white",
-                textDecoration: "none",
               }}
             />
           </Link>
@@ -60,14 +66,11 @@ const NavBar = () => {
             noWrap
             component={Link}
             to="/"
+            className="navbar-title"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
+              fontFamily: "inherit",
             }}
           >
             GamerZoneApp
@@ -76,11 +79,11 @@ const NavBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
+              aria-label="menú de navegación"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              className="navbar-menu-button"
             >
               <MenuIcon />
             </IconButton>
@@ -117,54 +120,64 @@ const NavBar = () => {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
+              fontFamily: "inherit",
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
             }}
           >
-            LOGO
+            GAMERZONE
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, gap: 1 }}
+          >
             {pages.map((page) => (
               <Button
                 key={page}
-                // onClick={handleCloseNavMenu}
-
                 component={Link}
-                to={`/category/${page}`}
-                sx={{ my: 2, color: "white", display: "block" }}
+                to={page === "Todos" ? "/" : `/category/${page}`}
+                className="navbar-category-button"
+                sx={{ my: 2, display: "block" }}
               >
                 {page}
               </Button>
             ))}
           </Box>
+
+          <Tooltip title={theme === "dark" ? "Modo claro" : "Modo oscuro"}>
+            <IconButton onClick={toggleTheme} className="theme-toggle-button">
+              {theme === "dark" ? (
+                <LightModeIcon className="theme-icon" />
+              ) : (
+                <DarkModeIcon className="theme-icon" />
+              )}
+            </IconButton>
+          </Tooltip>
+
           <Box
             component={Link}
             to="/cart"
             sx={{
               display: { xs: "none", md: "flex" },
-              mr: 1,
+              mr: 2,
               color: "white",
               textDecoration: "none",
-              alignItems: "center", // Asegura que el ícono esté alineado
+              alignItems: "center",
             }}
           >
             <CartWidget />
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Mi cuenta">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                {/* <CartWidget/> */}
-                <CuentaIcon />
+                <CuentaIcon className="navbar-account-icon" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -183,13 +196,22 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                component={Link}
+                to="/login"
+                onClick={handleCloseUserMenu}
+              >
+                <Typography sx={{ textAlign: "center" }}>
+                  Iniciar Sesión
+                </Typography>
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to="/profile"
+                onClick={handleCloseUserMenu}
+              >
+                <Typography sx={{ textAlign: "center" }}>Mi Perfil</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
