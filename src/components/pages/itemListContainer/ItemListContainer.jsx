@@ -10,6 +10,8 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import ImageCarousel from "../../common/imageCarousel/ImageCarousel";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ProductSearchBar from "../../common/ProductSearchBar/ProductSearchBar";
+import SearchIcon from "@mui/icons-material/Search"; // Importar SearchIcon
 import "./ItemListContainer.css";
 
 const images = [
@@ -28,12 +30,17 @@ const ItemListContainer = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(9);
 
   useEffect(() => {
     setCurrentPage(1);
     setLoading(true);
+    setSearchTerm("");
+    setSortOrder("");
 
     const coleccionDeProductos = collection(db, "products");
     let consulta = coleccionDeProductos;
@@ -60,10 +67,22 @@ const ItemListContainer = () => {
       });
   }, [name]);
 
+  const filteredProducts = items.filter((product) => {
+    // Usa product.title en lugar de product.name
+    const productTitle = product?.title || "";
+    return productTitle.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOrder === "asc") return a.price - b.price;
+    if (sortOrder === "desc") return b.price - a.price;
+    return 0;
+  });
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const currentItems = sortedProducts.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -77,8 +96,17 @@ const ItemListContainer = () => {
 
   return (
     <div className="item-list-container">
-      {/* Carrusel de imágenes: Solo se muestra si no hay categoría seleccionada */}
       {!name && <ImageCarousel images={images} />}
+
+      {!loading && items.length > 0 && (
+        <ProductSearchBar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          resultsCount={sortedProducts.length}
+        />
+      )}
 
       {name && (
         <div className="category-header">
@@ -89,7 +117,7 @@ const ItemListContainer = () => {
         </div>
       )}
 
-      {!loading && items.length > 0 && (
+      {!loading && sortedProducts.length > 0 && (
         <div className="items-per-page-selector">
           <label>Productos por página:</label>
           <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
@@ -101,7 +129,6 @@ const ItemListContainer = () => {
         </div>
       )}
 
-      {/* Lista de productos */}
       {loading ? (
         <Grid
           container
@@ -118,6 +145,22 @@ const ItemListContainer = () => {
             </Grid>
           ))}
         </Grid>
+      ) : sortedProducts.length === 0 ? (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "60px 20px",
+            color: "var(--text-muted)",
+          }}
+        >
+          <SearchIcon
+            style={{ fontSize: 64, marginBottom: 16, opacity: 0.5 }}
+          />
+          <h2 style={{ color: "var(--text-color)" }}>
+            No se encontraron productos
+          </h2>
+          <p>Intenta con otros términos de búsqueda o ajusta los filtros</p>
+        </div>
       ) : (
         <>
           <Grid
@@ -150,7 +193,6 @@ const ItemListContainer = () => {
               <div className="pagination-buttons">
                 {[...Array(totalPages)].map((_, index) => {
                   const pageNumber = index + 1;
-                  // Mostrar solo algunas páginas alrededor de la actual
                   if (
                     pageNumber === 1 ||
                     pageNumber === totalPages ||
@@ -198,8 +240,8 @@ const ItemListContainer = () => {
 
           <div className="pagination-info">
             Mostrando {indexOfFirstItem + 1} -{" "}
-            {Math.min(indexOfLastItem, items.length)} de {items.length}{" "}
-            productos
+            {Math.min(indexOfLastItem, sortedProducts.length)} de{" "}
+            {sortedProducts.length} productos
           </div>
         </>
       )}
