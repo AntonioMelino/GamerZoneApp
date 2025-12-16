@@ -25,7 +25,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import { useTheme } from "../../../context/ThemeContext";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router";
-import "./NavBar.css";
+import "./Navbar.css";
 
 const pages = ["Todos", "PC", "Consolas", "Notebooks", "Perifericos"];
 
