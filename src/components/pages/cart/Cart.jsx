@@ -1,15 +1,15 @@
 "use client";
 
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button, Typography, Grid, Box, TextField } from "@mui/material";
 import { useContext } from "react";
 import { CartContext } from "../../../context/CartContext";
+import { useAuth } from "../../../context/AuthContext";
 import Swal from "sweetalert2";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import "./Cart.css";
 
-// Función para formatear el precio
 const formatPrice = (price) => {
   return new Intl.NumberFormat("es-AR").format(price);
 };
@@ -17,11 +17,34 @@ const formatPrice = (price) => {
 const Cart = () => {
   const { resetCart, cart, removeById, getTotalAmount } =
     useContext(CartContext);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const total = getTotalAmount();
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-  // Función para vaciar el carrito con alerta de confirmación
+  const handleCheckout = () => {
+    if (!user) {
+      Swal.fire({
+        title: "Inicia sesión para continuar",
+        text: "Necesitas tener una cuenta para completar tu compra",
+        icon: "info",
+        background: "var(--bg-card)",
+        color: "var(--text-primary)",
+        confirmButtonColor: "#6366f1",
+        confirmButtonText: "Iniciar Sesión",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login", { state: { from: "/chekout" } });
+        }
+      });
+    } else {
+      navigate("/chekout");
+    }
+  };
+
   const resetCartWithAlert = () => {
     Swal.fire({
       title: "¿Seguro quieres vaciar el carrito?",
@@ -58,7 +81,6 @@ const Cart = () => {
     });
   };
 
-  // Función para eliminar un producto con alerta de confirmación
   const removeItemWithAlert = (id) => {
     Swal.fire({
       title: "¿Seguro quieres eliminar este producto?",
@@ -224,8 +246,7 @@ const Cart = () => {
               <Button
                 className="cart-button cart-button-primary"
                 variant="contained"
-                component={Link}
-                to="/checkout"
+                onClick={handleCheckout}
                 fullWidth
                 disabled={cart.length === 0}
               >
