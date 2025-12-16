@@ -12,24 +12,40 @@
   align-items: center;
   gap: 0.75rem;
   transition: transform var(--transition-base);
+  text-decoration: none;
 }
 
 .navbar-logo:hover {
   transform: translateY(-2px);
 }
 
-.navbar-logo-icon {
+/* Logo mobile con mismo estilo que desktop */
+.navbar-logo-mobile {
+  display: flex;
+  align-items: center;
+  transition: transform var(--transition-base);
+  text-decoration: none;
+}
+
+.navbar-logo-mobile:hover {
+  transform: translateY(-2px);
+}
+
+.navbar-logo-icon,
+.navbar-logo-icon-mobile {
   color: var(--primary-color) !important;
   font-size: 2rem !important;
   filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
   transition: all var(--transition-base);
 }
 
-.navbar-logo-icon:hover {
+.navbar-logo-icon:hover,
+.navbar-logo-icon-mobile:hover {
   transform: rotate(15deg);
 }
 
-.navbar-title {
+.navbar-title,
+.navbar-title-mobile {
   background: linear-gradient(
     135deg,
     var(--primary-color) 0%,
@@ -40,6 +56,7 @@
   background-clip: text;
   font-weight: 800 !important;
   letter-spacing: 0.1rem !important;
+  color: var(--primary-color);
 }
 
 .navbar-menu-button {
@@ -99,7 +116,7 @@
   transform: scale(1.1) rotate(10deg);
 }
 
-/* Nuevo botón de toggle de tema */
+/* Botón de toggle de tema */
 .theme-toggle-button {
   color: var(--text-primary) !important;
   background: var(--bg-hover) !important;
@@ -121,4 +138,41 @@
 
 .theme-icon {
   font-size: 1.5rem !important;
+}
+
+/* Responsive mobile optimizado */
+@media (max-width: 768px) {
+  .navbar-logo-icon-mobile {
+    font-size: 1.8rem !important;
+  }
+
+  .navbar-title-mobile {
+    font-size: 1.2rem !important;
+    letter-spacing: 0.15rem !important;
+  }
+
+  .theme-toggle-button {
+    width: 36px !important;
+    height: 36px !important;
+    margin-right: 8px !important;
+  }
+
+  .theme-icon {
+    font-size: 1.3rem !important;
+  }
+
+  .navbar-account-icon {
+    font-size: 1.8rem !important;
+  }
+}
+
+@media (max-width: 425px) {
+  .navbar-title-mobile {
+    font-size: 1rem !important;
+    letter-spacing: 0.1rem !important;
+  }
+
+  .navbar-logo-icon-mobile {
+    font-size: 1.5rem !important;
+  }
 }

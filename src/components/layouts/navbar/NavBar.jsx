@@ -14,18 +14,25 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router";
 import CuentaIcon from "@mui/icons-material/AccountCircle";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import HomeIcon from "@mui/icons-material/Home";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
 import { useTheme } from "../../../context/ThemeContext";
-import "./Navbar.css";
+import { useAuth } from "../../../context/AuthContext";
+import { useNavigate } from "react-router";
+import "./NavBar.css";
 
 const pages = ["Todos", "PC", "Consolas", "Notebooks", "Perifericos"];
 
 const NavBar = () => {
   const { theme, toggleTheme } = useTheme();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -44,6 +51,16 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      handleCloseUserMenu();
+      navigate("/");
+    } catch (error) {
+      console.error("[v0] Error al cerrar sesión:", error);
+    }
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -52,6 +69,7 @@ const NavBar = () => {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          {/* Logo Desktop */}
           <Link to={"/"} className="navbar-logo">
             <LogoIcon
               className="navbar-logo-icon"
@@ -76,6 +94,7 @@ const NavBar = () => {
             GamerZoneApp
           </Typography>
 
+          {/* Hamburger Menu Mobile */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -102,26 +121,82 @@ const NavBar = () => {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
+              className="mobile-menu"
             >
+              {/* Inicio */}
+              <MenuItem onClick={handleCloseNavMenu} component={Link} to="/">
+                <HomeIcon sx={{ mr: 1 }} />
+                <Typography>Inicio</Typography>
+              </MenuItem>
+
+              {/* Categorías */}
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography
-                    component={Link}
-                    to={page === "Todos" ? "/" : `/category/${page}`}
-                    sx={{ textAlign: "center" }}
-                  >
-                    {page}
-                  </Typography>
+                <MenuItem
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  to={page === "Todos" ? "/" : `/category/${page}`}
+                >
+                  <Typography sx={{ pl: 4 }}>{page}</Typography>
                 </MenuItem>
               ))}
+
+              {/* Carrito */}
+              <MenuItem
+                onClick={handleCloseNavMenu}
+                component={Link}
+                to="/cart"
+              >
+                <ShoppingCartIcon sx={{ mr: 1 }} />
+                <Typography>Carrito</Typography>
+              </MenuItem>
+
+              {/* Perfil o Login */}
+              {user ? (
+                <>
+                  <MenuItem
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    to="/profile"
+                  >
+                    <CuentaIcon sx={{ mr: 1 }} />
+                    <Typography>Mi Perfil</Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      handleLogout();
+                    }}
+                  >
+                    <LogoutIcon sx={{ mr: 1 }} />
+                    <Typography>Cerrar Sesión</Typography>
+                  </MenuItem>
+                </>
+              ) : (
+                <MenuItem
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  to="/login"
+                >
+                  <LoginIcon sx={{ mr: 1 }} />
+                  <Typography>Iniciar Sesión</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+
+          <Link to={"/"} className="navbar-logo-mobile">
+            <LogoIcon
+              className="navbar-logo-icon-mobile"
+              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            />
+          </Link>
           <Typography
             variant="h5"
             noWrap
             component={Link}
             to="/"
+            className="navbar-title-mobile"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -129,12 +204,13 @@ const NavBar = () => {
               fontFamily: "inherit",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
               textDecoration: "none",
             }}
           >
             GAMERZONE
           </Typography>
+
+          {/* Categorías Desktop */}
           <Box
             sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, gap: 1 }}
           >
@@ -151,6 +227,21 @@ const NavBar = () => {
             ))}
           </Box>
 
+          <Box
+            component={Link}
+            to="/cart"
+            sx={{
+              display: "flex",
+              mr: { xs: 1, md: 2 },
+              color: "white",
+              textDecoration: "none",
+              alignItems: "center",
+            }}
+          >
+            <CartWidget />
+          </Box>
+
+          {/* Toggle de tema */}
           <Tooltip title={theme === "dark" ? "Modo claro" : "Modo oscuro"}>
             <IconButton onClick={toggleTheme} className="theme-toggle-button">
               {theme === "dark" ? (
@@ -161,19 +252,7 @@ const NavBar = () => {
             </IconButton>
           </Tooltip>
 
-          <Box
-            component={Link}
-            to="/cart"
-            sx={{
-              display: { xs: "none", md: "flex" },
-              mr: 2,
-              color: "white",
-              textDecoration: "none",
-              alignItems: "center",
-            }}
-          >
-            <CartWidget />
-          </Box>
+          {/* Menú de usuario */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Mi cuenta">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -182,7 +261,7 @@ const NavBar = () => {
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}
-              id="menu-appbar"
+              id="menu-appbar-user"
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: "top",
@@ -196,22 +275,31 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem
-                component={Link}
-                to="/login"
-                onClick={handleCloseUserMenu}
-              >
-                <Typography sx={{ textAlign: "center" }}>
-                  Iniciar Sesión
-                </Typography>
-              </MenuItem>
-              <MenuItem
-                component={Link}
-                to="/profile"
-                onClick={handleCloseUserMenu}
-              >
-                <Typography sx={{ textAlign: "center" }}>Mi Perfil</Typography>
-              </MenuItem>
+              {user ? (
+                <>
+                  <MenuItem
+                    component={Link}
+                    to="/profile"
+                    onClick={handleCloseUserMenu}
+                  >
+                    <CuentaIcon sx={{ mr: 1 }} />
+                    <Typography>Mi Perfil</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <LogoutIcon sx={{ mr: 1 }} />
+                    <Typography>Cerrar Sesión</Typography>
+                  </MenuItem>
+                </>
+              ) : (
+                <MenuItem
+                  component={Link}
+                  to="/login"
+                  onClick={handleCloseUserMenu}
+                >
+                  <LoginIcon sx={{ mr: 1 }} />
+                  <Typography>Iniciar Sesión</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>
