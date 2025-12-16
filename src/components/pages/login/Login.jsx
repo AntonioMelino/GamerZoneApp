@@ -2,12 +2,24 @@
 
 import { useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GoogleIcon from "@mui/icons-material/Google";
+import AlreadyLoggedIn from "../../auth/alreadyLoggedIn/AlreadyLoggedIn";
 import "./Login.css";
 
 const Login = () => {
+  const { user } = useAuth();
+
+  // Si el usuario ya está autenticado, mostrar componente AlreadyLoggedIn
+  if (user) {
+    return <AlreadyLoggedIn />;
+  }
+
+  return <LoginForm />;
+};
+
+const LoginForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +29,9 @@ const Login = () => {
 
   const { login, signup, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from || "/profile";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +49,7 @@ const Login = () => {
         }
         await signup(email, password, displayName);
       }
-      navigate("/profile");
+      navigate(from);
     } catch (err) {
       console.error("[v0] Error de autenticación:", err);
       if (err.code === "auth/email-already-in-use") {
@@ -61,7 +76,7 @@ const Login = () => {
     setLoading(true);
     try {
       await loginWithGoogle();
-      navigate("/profile");
+      navigate(from);
     } catch (err) {
       console.error("[v0] Error de login con Google:", err);
       setError("No se pudo iniciar sesión con Google");

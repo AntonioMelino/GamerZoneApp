@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router";
 import { useContext } from "react";
 import { CartContext } from "../../../context/CartContext";
+import AuthGuard from "../../auth/authGuard/AuthGuard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import EmailIcon from "@mui/icons-material/Email";
@@ -13,14 +14,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import "./Profile.css";
 
 const Profile = () => {
+  return (
+    <AuthGuard
+      redirectTo="/login"
+      message="Para ver tu perfil necesitas iniciar sesión con tu cuenta de GamerZoneApp"
+    >
+      <ProfileContent />
+    </AuthGuard>
+  );
+};
+
+const ProfileContent = () => {
   const { user, logout } = useAuth();
   const { cart } = useContext(CartContext);
   const navigate = useNavigate();
-
-  if (!user) {
-    navigate("/login");
-    return null;
-  }
 
   const handleLogout = async () => {
     try {
