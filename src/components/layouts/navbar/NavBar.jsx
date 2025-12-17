@@ -19,7 +19,6 @@ import CuentaIcon from "@mui/icons-material/AccountCircle";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import HomeIcon from "@mui/icons-material/Home";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import { useTheme } from "../../../context/ThemeContext";
@@ -61,41 +60,67 @@ const NavBar = () => {
     }
   };
 
+  const handleThemeToggleMobile = () => {
+    toggleTheme();
+    handleCloseNavMenu();
+  };
+
   return (
     <AppBar
       position="fixed"
       className="navbar-custom"
-      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+        overflowX: "hidden", // Evitar scroll horizontal
+      }}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+      <Container maxWidth="xl" sx={{ overflowX: "hidden" }}>
+        <Toolbar
+          disableGutters
+          sx={{
+            justifyContent: "space-between",
+            overflowX: "hidden",
+            width: "100%",
+          }}
+        >
           {/* Logo Desktop */}
-          <Link to={"/"} className="navbar-logo">
-            <LogoIcon
-              className="navbar-logo-icon"
+          <Box
+            sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
+          >
+            <Link to={"/"} className="navbar-logo">
+              <LogoIcon
+                className="navbar-logo-icon"
+                sx={{
+                  mr: 1,
+                }}
+              />
+            </Link>
+            <Typography
+              variant="h6"
+              noWrap
+              component={Link}
+              to="/"
+              className="navbar-title"
               sx={{
-                display: { xs: "none", md: "flex" },
-                mr: 1,
+                mr: 2,
+                fontFamily: "inherit",
               }}
-            />
-          </Link>
-          <Typography
-            variant="h6"
-            noWrap
-            component={Link}
-            to="/"
-            className="navbar-title"
+            >
+              GamerZoneApp
+            </Typography>
+          </Box>
+
+          {/* Vista Mobile - Menú hamburguesa, logo y carrito */}
+          <Box
             sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "inherit",
+              display: { xs: "flex", md: "none" },
+              alignItems: "center",
+              width: "100%",
+              justifyContent: "space-between",
+              overflowX: "hidden",
             }}
           >
-            GamerZoneApp
-          </Typography>
-
-          {/* Hamburger Menu Mobile */}
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            {/* Menú hamburguesa */}
             <IconButton
               size="large"
               aria-label="menú de navegación"
@@ -103,116 +128,156 @@ const NavBar = () => {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               className="navbar-menu-button"
+              sx={{ ml: 0 }}
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
-              className="mobile-menu"
-            >
-              {/* Inicio */}
-              <MenuItem onClick={handleCloseNavMenu} component={Link} to="/">
-                <HomeIcon sx={{ mr: 1 }} />
-                <Typography>Inicio</Typography>
-              </MenuItem>
 
-              {/* Categorías */}
-              {pages.map((page) => (
+            {/* Logo y título mobile */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexGrow: 1,
+                justifyContent: "center",
+              }}
+            >
+              <Link to={"/"} className="navbar-logo-mobile">
+                <LogoIcon className="navbar-logo-icon-mobile" sx={{ mr: 1 }} />
+              </Link>
+              <Typography
+                variant="h6"
+                noWrap
+                component={Link}
+                to="/"
+                className="navbar-title-mobile"
+                sx={{
+                  fontFamily: "inherit",
+                  fontWeight: 700,
+                  letterSpacing: ".1rem",
+                  textDecoration: "none",
+                  fontSize: { xs: "1rem", sm: "1.2rem" },
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: { xs: "120px", sm: "180px" },
+                }}
+              >
+                GAMERZONE
+              </Typography>
+            </Box>
+
+            {/* Carrito mobile */}
+            <Box
+              component={Link}
+              to="/cart"
+              sx={{
+                display: "flex",
+                color: "white",
+                textDecoration: "none",
+                alignItems: "center",
+                mr: 1,
+              }}
+            >
+              <CartWidget />
+            </Box>
+          </Box>
+
+          {/* Menú mobile completo */}
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElNav}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            open={Boolean(anchorElNav)}
+            onClose={handleCloseNavMenu}
+            sx={{
+              display: { xs: "block", md: "none" },
+              "& .MuiPaper-root": {
+                maxWidth: "100vw",
+                overflowX: "hidden",
+              },
+            }}
+            className="mobile-menu"
+          >
+            {/* Inicio */}
+            <MenuItem onClick={handleCloseNavMenu} component={Link} to="/">
+              <HomeIcon sx={{ mr: 1 }} />
+              <Typography>Inicio</Typography>
+            </MenuItem>
+
+            {/* Categorías */}
+            {pages.map((page) => (
+              <MenuItem
+                key={page}
+                onClick={handleCloseNavMenu}
+                component={Link}
+                to={page === "Todos" ? "/" : `/category/${page}`}
+              >
+                <Typography sx={{ pl: 4 }}>{page}</Typography>
+              </MenuItem>
+            ))}
+
+            {/* Toggle de tema - Moved inside mobile menu */}
+            <MenuItem onClick={handleThemeToggleMobile}>
+              {theme === "dark" ? (
+                <LightModeIcon sx={{ mr: 1 }} />
+              ) : (
+                <DarkModeIcon sx={{ mr: 1 }} />
+              )}
+              <Typography>
+                {theme === "dark" ? "Modo claro" : "Modo oscuro"}
+              </Typography>
+            </MenuItem>
+
+            {/* Perfil o Login */}
+            {user ? (
+              <>
                 <MenuItem
-                  key={page}
                   onClick={handleCloseNavMenu}
                   component={Link}
-                  to={page === "Todos" ? "/" : `/category/${page}`}
+                  to="/profile"
                 >
-                  <Typography sx={{ pl: 4 }}>{page}</Typography>
+                  <CuentaIcon sx={{ mr: 1 }} />
+                  <Typography>Mi Perfil</Typography>
                 </MenuItem>
-              ))}
-
-              {/* Carrito */}
+                <MenuItem
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    handleLogout();
+                  }}
+                >
+                  <LogoutIcon sx={{ mr: 1 }} />
+                  <Typography>Cerrar Sesión</Typography>
+                </MenuItem>
+              </>
+            ) : (
               <MenuItem
                 onClick={handleCloseNavMenu}
                 component={Link}
-                to="/cart"
+                to="/login"
               >
-                <ShoppingCartIcon sx={{ mr: 1 }} />
-                <Typography>Carrito</Typography>
+                <LoginIcon sx={{ mr: 1 }} />
+                <Typography>Iniciar Sesión</Typography>
               </MenuItem>
+            )}
+          </Menu>
 
-              {/* Perfil o Login */}
-              {user ? (
-                <>
-                  <MenuItem
-                    onClick={handleCloseNavMenu}
-                    component={Link}
-                    to="/profile"
-                  >
-                    <CuentaIcon sx={{ mr: 1 }} />
-                    <Typography>Mi Perfil</Typography>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleCloseNavMenu();
-                      handleLogout();
-                    }}
-                  >
-                    <LogoutIcon sx={{ mr: 1 }} />
-                    <Typography>Cerrar Sesión</Typography>
-                  </MenuItem>
-                </>
-              ) : (
-                <MenuItem
-                  onClick={handleCloseNavMenu}
-                  component={Link}
-                  to="/login"
-                >
-                  <LoginIcon sx={{ mr: 1 }} />
-                  <Typography>Iniciar Sesión</Typography>
-                </MenuItem>
-              )}
-            </Menu>
-          </Box>
-
-          <Link to={"/"} className="navbar-logo-mobile">
-            <LogoIcon
-              className="navbar-logo-icon-mobile"
-              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
-          </Link>
-          <Typography
-            variant="h5"
-            noWrap
-            component={Link}
-            to="/"
-            className="navbar-title-mobile"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "inherit",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              textDecoration: "none",
-            }}
-          >
-            GAMERZONE
-          </Typography>
-
-          {/* Categorías Desktop */}
+          {/* Vista Desktop - Categorías */}
           <Box
-            sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, gap: 1 }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              gap: 1,
+              justifyContent: "center",
+            }}
           >
             {pages.map((page) => (
               <Button
@@ -227,80 +292,90 @@ const NavBar = () => {
             ))}
           </Box>
 
+          {/* Vista Desktop - Carrito, Toggle de tema y Cuenta */}
           <Box
-            component={Link}
-            to="/cart"
             sx={{
-              display: "flex",
-              mr: { xs: 1, md: 2 },
-              color: "white",
-              textDecoration: "none",
+              display: { xs: "none", md: "flex" },
               alignItems: "center",
+              gap: 1,
             }}
           >
-            <CartWidget />
-          </Box>
+            {/* Carrito desktop */}
+            <Box
+              component={Link}
+              to="/cart"
+              sx={{
+                display: "flex",
+                color: "white",
+                textDecoration: "none",
+                alignItems: "center",
+                mr: 2,
+              }}
+            >
+              <CartWidget />
+            </Box>
 
-          {/* Toggle de tema */}
-          <Tooltip title={theme === "dark" ? "Modo claro" : "Modo oscuro"}>
-            <IconButton onClick={toggleTheme} className="theme-toggle-button">
-              {theme === "dark" ? (
-                <LightModeIcon className="theme-icon" />
-              ) : (
-                <DarkModeIcon className="theme-icon" />
-              )}
-            </IconButton>
-          </Tooltip>
-
-          {/* Menú de usuario */}
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Mi cuenta">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <CuentaIcon className="navbar-account-icon" />
+            {/* Toggle de tema desktop */}
+            <Tooltip title={theme === "dark" ? "Modo claro" : "Modo oscuro"}>
+              <IconButton onClick={toggleTheme} className="theme-toggle-button">
+                {theme === "dark" ? (
+                  <LightModeIcon className="theme-icon" />
+                ) : (
+                  <DarkModeIcon className="theme-icon" />
+                )}
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar-user"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {user ? (
-                <>
+
+            {/* Menú de usuario desktop */}
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Mi cuenta">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <CuentaIcon className="navbar-account-icon" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar-user"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {user ? (
+                  <>
+                    <MenuItem
+                      component={Link}
+                      to="/profile"
+                      onClick={handleCloseUserMenu}
+                    >
+                      <CuentaIcon sx={{ mr: 1 }} />
+                      <Typography>Mi Perfil</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      <LogoutIcon sx={{ mr: 1 }} />
+                      <Typography>Cerrar Sesión</Typography>
+                    </MenuItem>
+                  </>
+                ) : (
                   <MenuItem
                     component={Link}
-                    to="/profile"
+                    to="/login"
                     onClick={handleCloseUserMenu}
                   >
-                    <CuentaIcon sx={{ mr: 1 }} />
-                    <Typography>Mi Perfil</Typography>
+                    <LoginIcon sx={{ mr: 1 }} />
+                    <Typography>Iniciar Sesión</Typography>
                   </MenuItem>
-                  <MenuItem onClick={handleLogout}>
-                    <LogoutIcon sx={{ mr: 1 }} />
-                    <Typography>Cerrar Sesión</Typography>
-                  </MenuItem>
-                </>
-              ) : (
-                <MenuItem
-                  component={Link}
-                  to="/login"
-                  onClick={handleCloseUserMenu}
-                >
-                  <LoginIcon sx={{ mr: 1 }} />
-                  <Typography>Iniciar Sesión</Typography>
-                </MenuItem>
-              )}
-            </Menu>
+                )}
+              </Menu>
+            </Box>
           </Box>
         </Toolbar>
       </Container>

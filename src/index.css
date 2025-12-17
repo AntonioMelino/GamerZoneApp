@@ -112,3 +112,17 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-dark);
 }
+
+/* invalidar scroll lateral innesesario */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+#root,
+.App {
+  max-width: 100%;
+  overflow-x: hidden;
+}
