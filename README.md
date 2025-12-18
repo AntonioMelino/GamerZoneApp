@@ -1,26 +1,30 @@
 # Gamer Zone App
 
-¡Bienvenido a **Gamer Zone App**! Esta es una tienda en línea especializada en productos gamer, desarrollada con React, Firebase y Material-UI (MUI). En esta plataforma, los usuarios pueden explorar un catálogo de productos, filtrar por categorías, agregar productos al carrito y realizar compras de manera segura. Además, próximamente se integrará un sistema de autenticación con perfiles de usuario.
+¡Bienvenido a **Gamer Zone App**! Esta es una tienda en línea especializada en productos gamer, desarrollada con React, Firebase y Material-UI (MUI). En esta plataforma, los usuarios pueden explorar un catálogo de productos, filtrar por categorías, agregar productos al carrito y realizar compras de manera segura. Además, cuenta con un sistema completo de autenticación de usuarios.
 
 ## Características principales
 
 - **Catálogo de productos**: Explora una amplia gama de productos gamer, como componentes de PC, consolas, periféricos y más.
-- **Filtrado por categorías**: Navega fácilmente entre categorías para encontrar lo que necesitas.
+- **Sistema de autenticación**: Registro y login de usuarios mediante Firebase Authentication.
+- **Filtrado avanzado**: Filtra productos por categorías y ordena por precio (de mayor a menor o viceversa).
+- **Búsqueda de productos**: Encuentra productos específicos mediante el buscador integrado.
 - **Carrito de compras**: Agrega productos al carrito, ajusta cantidades y procede al checkout.
 - **Checkout seguro**: Completa tu compra con un formulario de checkout sencillo y seguro.
-- **Integración con Firebase**: Los productos y las órdenes se almacenan en Firebase Firestore.
-- **Diseño responsive**: La aplicación está diseñada para funcionar en dispositivos móviles, tablets y desktop.
-- **Próximamente**: Sistema de autenticación con perfiles de usuario y más funcionalidades.
+- **Integración con Firebase**: Los productos, órdenes y usuarios se almacenan en Firebase (Firestore y Authentication).
+- **Diseño completamente responsive**: Optimizado para dispositivos móviles, tablets y desktop.
+- **Perfiles de usuario**: Los usuarios autenticados pueden gestionar sus datos y visualizar su historial de compras.
 
 ## Demostración
 
-![gifProyectReact1](https://github.com/user-attachments/assets/e7b6d346-80b3-4e0a-bf57-bc5aa7b9d585)
+![GamerZoneApp-gif](https://github.com/user-attachments/assets/7df7decd-21a4-438f-a9e7-e39790348b58)
+
 
 ## Tecnologías utilizadas
 
 - **React**: Biblioteca de JavaScript para construir la interfaz de usuario.
 - **React Router**: Para la navegación entre páginas.
-- **Firebase**: Backend para almacenar productos y gestionar órdenes.
+- **Firebase**: Backend para autenticación, almacenar productos y gestionar órdenes.
+- **Firebase Authentication**: Sistema de login y registro de usuarios.
 - **Material-UI (MUI)**: Librería de componentes para un diseño moderno y responsive.
 - **CSS**: Para estilos personalizados y ajustes de diseño.
 - **Vercel**: Plataforma de despliegue en la nube.
