@@ -6,12 +6,13 @@ import Chekout from "./components/pages/checkout/Chekout";
 import Login from "./components/pages/login/Login";
 import Profile from "./components/pages/profile/Profile";
 
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageNotFound from "./components/pages/pageNotFound/PageNotFound";
 import CartContextProvider from "./context/CartContext";
 import Footer from "./components/layouts/footer/Footer";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
+import ScrollToTop from "./components/common/scrollToTop/ScrollToTop";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
               }}
             >
               <NavBar />
+              <ScrollToTop />
               <main style={{ flex: 1 }}>
                 <Routes>
                   <Route path="/" element={<ItemListContainer />} />
