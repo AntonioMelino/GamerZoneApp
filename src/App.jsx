@@ -5,8 +5,9 @@ import ItemListContainer from "./components/pages/itemListContainer/ItemListCont
 import Chekout from "./components/pages/checkout/Chekout";
 import Login from "./components/pages/login/Login";
 import Profile from "./components/pages/profile/Profile";
-import EditProfile from "./components/pages/profile/EditProfile"; // NUEVO
-import OrdersHistory from "./components/pages/profile/OrdersHistory"; // NUEVO
+import EditProfile from "./components/pages/profile/EditProfile";
+import OrdersHistory from "./components/pages/profile/OrdersHistory";
+import OrderConfirmation from "./components/pages/orderConfirmation/OrderConfirmation"; // NUEVO
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageNotFound from "./components/pages/pageNotFound/PageNotFound";
@@ -43,13 +44,13 @@ function App() {
                   <Route path="/chekout" element={<Chekout />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/profile" element={<Profile />} />
-                  <Route path="/profile/edit" element={<EditProfile />} />{" "}
-                  {/* NUEVA RUTA */}
+                  <Route path="/profile/edit" element={<EditProfile />} />
+                  <Route path="/profile/orders" element={<OrdersHistory />} />
+                  {/* NUEVA RUTA: */}
                   <Route
-                    path="/profile/orders"
-                    element={<OrdersHistory />}
-                  />{" "}
-                  {/* NUEVA RUTA */}
+                    path="/order-confirmation/:orderId"
+                    element={<OrderConfirmation />}
+                  />
                   <Route path="*" element={<PageNotFound />} />
                 </Routes>
               </main>

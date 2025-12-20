@@ -28,7 +28,8 @@ const Checkout = () => {
 };
 
 const CheckoutContent = () => {
-  const { cart, getTotalAmount, resetCart } = useContext(CartContext);
+  const { cart, getTotalAmount, resetCart, createOrder } =
+    useContext(CartContext);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -37,8 +38,13 @@ const CheckoutContent = () => {
     apellido: "",
     email: "",
     telefono: "",
+    direccion: "",
+    ciudad: "",
+    codigoPostal: "",
   });
+
   const [orderId, setOrderId] = useState(null);
+  const [localOrderId, setLocalOrderId] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -60,14 +66,26 @@ const CheckoutContent = () => {
   const handleSubmit = async (evento) => {
     evento.preventDefault();
     setLoading(true);
+    setError(null);
 
-    if (
-      !userData.nombre ||
-      !userData.apellido ||
-      !userData.email ||
-      !userData.telefono
-    ) {
-      setError("Todos los campos son obligatorios.");
+    // Validaciones
+    const requiredFields = [
+      "nombre",
+      "apellido",
+      "email",
+      "telefono",
+      "direccion",
+      "ciudad",
+      "codigoPostal",
+    ];
+    const missingFields = requiredFields.filter(
+      (field) => !userData[field]?.trim()
+    );
+
+    if (missingFields.length > 0) {
+      setError(
+        `Los siguientes campos son obligatorios: ${missingFields.join(", ")}`
+      );
       setLoading(false);
       return;
     }
@@ -88,30 +106,73 @@ const CheckoutContent = () => {
 
     try {
       const total = getTotalAmount();
-      const order = {
-        buyer: userData,
+
+      // Crear datos para Firebase
+      const firebaseOrder = {
+        buyer: {
+          nombre: userData.nombre,
+          apellido: userData.apellido,
+          email: userData.email,
+          telefono: userData.telefono,
+          direccion: userData.direccion,
+          ciudad: userData.ciudad,
+          codigoPostal: userData.codigoPostal,
+        },
         userId: user.uid,
-        items: cart,
+        items: cart.map((item) => ({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+          imageUrl: item.imageUrl,
+        })),
         total: total,
         createdAt: new Date().toISOString(),
         status: "pendiente",
       };
 
+      // Guardar en Firebase
       const refCollection = collection(db, "orders");
-      const res = await addDoc(refCollection, order);
-      setOrderId(res.id);
+      const res = await addDoc(refCollection, firebaseOrder);
+      const firebaseOrderId = res.id;
+
+      // Actualizar stock en Firebase
+      const productsCollection = collection(db, "products");
+      await Promise.all(
+        cart.map(async (item) => {
+          if (item.stock !== undefined) {
+            const productRef = doc(productsCollection, item.id);
+            await updateDoc(productRef, { stock: item.stock - item.quantity });
+          }
+        })
+      );
+
+      // Crear orden local en CartContext
+      const localOrder = createOrder({
+        firebaseId: firebaseOrderId,
+        userId: user.uid,
+        buyer: userData,
+        shippingAddress: {
+          street: userData.direccion,
+          city: userData.ciudad,
+          zipCode: userData.codigoPostal,
+        },
+        paymentMethod: "Mercado Pago",
+        customerEmail: userData.email,
+        status: "completed",
+      });
+
+      // Limpiar carrito
       resetCart();
 
-      const productsCollection = collection(db, "products");
-      order.items.forEach(async (item) => {
-        const productRef = doc(productsCollection, item.id);
-        await updateDoc(productRef, { stock: item.stock - item.quantity });
-      });
+      // Guardar IDs para mostrar en la página de éxito
+      setOrderId(firebaseOrderId);
+      setLocalOrderId(localOrder.id);
     } catch (error) {
+      console.error("[v0] Error al procesar la compra:", error);
       setError(
         "Hubo un error al procesar tu compra. Por favor, intenta nuevamente."
       );
-      console.error("[v0] Error al procesar la compra:", error);
     } finally {
       setLoading(false);
     }
@@ -141,7 +202,7 @@ const CheckoutContent = () => {
             Tu pedido ha sido procesado exitosamente
           </Typography>
           <Typography className="checkout-order-id" variant="h6">
-            Número de orden:
+            Número de orden (Firebase):
             <div className="checkout-order-number">{orderId}</div>
           </Typography>
           <Typography className="checkout-success-info" variant="body2">
@@ -159,10 +220,9 @@ const CheckoutContent = () => {
             <Button
               className="checkout-profile-button"
               variant="outlined"
-              component={Link}
-              to="/profile"
+              onClick={() => navigate(`/order-confirmation/${localOrderId}`)}
             >
-              Ver mi perfil
+              Ver confirmación detallada
             </Button>
           </Box>
         </Box>
@@ -258,47 +318,91 @@ const CheckoutContent = () => {
               variant="h5"
               gutterBottom
             >
-              Datos de contacto
+              Datos de envío
             </Typography>
             <form onSubmit={handleSubmit} className="checkout-form">
-              <TextField
-                className="checkout-input"
-                fullWidth
-                label="Nombre"
-                name="nombre"
-                value={userData.nombre}
-                onChange={handleChange}
-                required
-              />
-              <TextField
-                className="checkout-input"
-                fullWidth
-                label="Apellido"
-                name="apellido"
-                value={userData.apellido}
-                onChange={handleChange}
-                required
-              />
-              <TextField
-                className="checkout-input"
-                fullWidth
-                label="Email"
-                name="email"
-                type="email"
-                value={userData.email}
-                onChange={handleChange}
-                required
-              />
-              <TextField
-                className="checkout-input"
-                fullWidth
-                label="Teléfono (10 dígitos)"
-                name="telefono"
-                value={userData.telefono}
-                onChange={handleChange}
-                placeholder="1234567890"
-                required
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    className="checkout-input"
+                    fullWidth
+                    label="Nombre"
+                    name="nombre"
+                    value={userData.nombre}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    className="checkout-input"
+                    fullWidth
+                    label="Apellido"
+                    name="apellido"
+                    value={userData.apellido}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    className="checkout-input"
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={userData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    className="checkout-input"
+                    fullWidth
+                    label="Teléfono (10 dígitos)"
+                    name="telefono"
+                    value={userData.telefono}
+                    onChange={handleChange}
+                    placeholder="1234567890"
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    className="checkout-input"
+                    fullWidth
+                    label="Dirección"
+                    name="direccion"
+                    value={userData.direccion}
+                    onChange={handleChange}
+                    placeholder="Calle y número"
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    className="checkout-input"
+                    fullWidth
+                    label="Ciudad"
+                    name="ciudad"
+                    value={userData.ciudad}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    className="checkout-input"
+                    fullWidth
+                    label="Código Postal"
+                    name="codigoPostal"
+                    value={userData.codigoPostal}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+              </Grid>
 
               {error && (
                 <Alert severity="error" className="checkout-error">
