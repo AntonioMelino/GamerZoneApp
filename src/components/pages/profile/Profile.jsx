@@ -12,6 +12,8 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
+import PhoneIcon from "@mui/icons-material/Phone";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import "./Profile.css";
 
 const Profile = () => {
@@ -26,7 +28,7 @@ const Profile = () => {
 };
 
 const ProfileContent = () => {
-  const { user, logout } = useAuth();
+  const { user, userData, logout } = useAuth();
   const { cart } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -55,44 +57,75 @@ const ProfileContent = () => {
           </div>
           <div className="profile-info">
             <h2 className="profile-name">
-              {user.displayName || "Usuario Gamer"}
+              {user?.displayName || "Usuario Gamer"}
             </h2>
-            <p className="profile-email">{user.email}</p>
+            <p className="profile-email">{user?.email}</p>
+
+            {/* Mostrar teléfono y dirección si existen */}
+            {userData?.phone && (
+              <div className="profile-detail">
+                <PhoneIcon fontSize="small" style={{ marginRight: "8px" }} />
+                <span>{userData.phone}</span>
+              </div>
+            )}
+
+            {userData?.address && (
+              <div className="profile-detail">
+                <LocationOnIcon
+                  fontSize="small"
+                  style={{ marginRight: "8px" }}
+                />
+                <span>{userData.address}</span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Estadísticas */}
         <div className="profile-card">
-          <h3 className="profile-card-title">Estadísticas</h3>
+          <h3 className="profile-card-title">Información de contacto</h3>
           <div className="profile-stats">
-            <div className="stat-item">
-              <ShoppingCartIcon className="stat-icon" />
-              <div className="stat-content">
-                <div className="stat-label">Productos en carrito</div>
-                <div className="stat-value">{totalItems}</div>
-              </div>
-            </div>
             <div className="stat-item">
               <EmailIcon className="stat-icon" />
               <div className="stat-content">
-                <div className="stat-label">Email verificado</div>
-                <div className="stat-value">
-                  {user.emailVerified ? "Sí" : "No"}
-                </div>
+                <div className="stat-label">Email</div>
+                <div className="stat-value">{user?.email}</div>
               </div>
             </div>
+
+            {userData?.phone && (
+              <div className="stat-item">
+                <PhoneIcon className="stat-icon" />
+                <div className="stat-content">
+                  <div className="stat-label">Teléfono</div>
+                  <div className="stat-value">{userData.phone}</div>
+                </div>
+              </div>
+            )}
+
+            {userData?.address && (
+              <div className="stat-item">
+                <LocationOnIcon className="stat-icon" />
+                <div className="stat-content">
+                  <div className="stat-label">Dirección</div>
+                  <div className="stat-value" style={{ fontSize: "0.9rem" }}>
+                    {userData.address}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="stat-item">
               <CalendarTodayIcon className="stat-icon" />
               <div className="stat-content">
                 <div className="stat-label">Miembro desde</div>
                 <div className="stat-value">
-                  {new Date(user.metadata.creationTime).toLocaleDateString(
-                    "es-ES",
-                    {
-                      year: "numeric",
-                      month: "long",
-                    }
-                  )}
+                  {user?.metadata?.creationTime
+                    ? new Date(user.metadata.creationTime).toLocaleDateString(
+                        "es-ES",
+                        { year: "numeric", month: "long" }
+                      )
+                    : "Fecha no disponible"}
                 </div>
               </div>
             </div>
@@ -156,7 +189,8 @@ const ProfileContent = () => {
 
 // Componente para historial de compras
 const OrderHistory = () => {
-  const { orders } = useContext(CartContext); // Asumiré que agregaremos orders al CartContext
+  const { orders } = useContext(CartContext);
+  const navigate = useNavigate();
 
   if (!orders || orders.length === 0) {
     return (
@@ -179,7 +213,7 @@ const OrderHistory = () => {
         <button
           className="action-button action-button-primary"
           style={{ width: "auto", margin: "0 auto" }}
-          onClick={() => (window.location.href = "/")}
+          onClick={() => navigate("/")}
         >
           <ShoppingCartIcon />
           Comenzar a comprar
@@ -207,9 +241,7 @@ const OrderHistory = () => {
           <button
             className="action-button action-button-secondary"
             style={{ padding: "6px 12px", fontSize: "0.85rem" }}
-            onClick={() =>
-              (window.location.href = `/profile/orders/${order.id}`)
-            }
+            onClick={() => navigate(`/profile/orders/${order.id}`)}
           >
             Ver detalle
           </button>
@@ -219,7 +251,7 @@ const OrderHistory = () => {
         <div style={{ textAlign: "center", marginTop: "var(--spacing-md)" }}>
           <button
             className="action-button action-button-secondary"
-            onClick={() => (window.location.href = "/profile/orders")}
+            onClick={() => navigate("/profile/orders")}
           >
             Ver todas las compras ({orders.length})
           </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router";
 import AuthGuard from "../../auth/authGuard/AuthGuard";
@@ -23,20 +23,29 @@ const EditProfile = () => {
 };
 
 const EditProfileContent = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, userData, updateUserData, refreshUserData } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    displayName: user.displayName || "",
-    email: user.email || "",
-    phone: user.phoneNumber || "",
+    displayName: "",
+    phone: "",
     address: "",
   });
 
-  const [avatar, setAvatar] = useState(user.photoURL || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // Inicializar formulario con datos del usuario
+  useEffect(() => {
+    if (user && userData) {
+      setFormData({
+        displayName: user.displayName || userData.displayName || "",
+        phone: userData.phone || "",
+        address: userData.address || "",
+      });
+    }
+  }, [user, userData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,17 +55,6 @@ const EditProfileContent = () => {
     }));
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatar(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -64,18 +62,35 @@ const EditProfileContent = () => {
     setSuccess("");
 
     try {
-      await updateProfile({
-        displayName: formData.displayName,
-        photoURL: avatar,
-      });
+      // Preparar datos para actualizar
+      const updateData = {
+        displayName: formData.displayName.trim(),
+        phone: formData.phone.trim(),
+        address: formData.address.trim(),
+      };
+
+      // Validar nombre
+      if (!updateData.displayName) {
+        throw new Error("El nombre es requerido");
+      }
+
+      // Actualizar en Firestore
+      await updateUserData(updateData);
 
       setSuccess("Perfil actualizado correctamente");
+
+      // Actualizar datos locales
+      await refreshUserData();
+
+      // Redirigir después de 1.5 segundos
       setTimeout(() => {
         navigate("/profile");
       }, 1500);
     } catch (error) {
       console.error("[v0] Error al actualizar perfil:", error);
-      setError("Error al actualizar el perfil. Intenta nuevamente.");
+      setError(
+        error.message || "Error al actualizar el perfil. Intenta nuevamente."
+      );
     } finally {
       setLoading(false);
     }
@@ -112,36 +127,6 @@ const EditProfileContent = () => {
         {success && <div className="success-message">{success}</div>}
 
         <form className="edit-profile-form" onSubmit={handleSubmit}>
-          <div className="avatar-upload">
-            <div className="avatar-preview">
-              {avatar ? (
-                <img src={avatar} alt="Avatar" />
-              ) : (
-                <PersonIcon style={{ fontSize: "3rem", color: "white" }} />
-              )}
-            </div>
-            <div className="avatar-upload-label">
-              <label className="upload-button">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  style={{ display: "none" }}
-                />
-                Cambiar foto de perfil
-              </label>
-              <p
-                style={{
-                  fontSize: "0.85rem",
-                  color: "var(--text-muted)",
-                  marginTop: "0.5rem",
-                }}
-              >
-                Recomendado: JPG, PNG de 100x100px
-              </p>
-            </div>
-          </div>
-
           <div className="form-group">
             <label className="form-label">
               <PersonIcon fontSize="small" />
@@ -154,6 +139,7 @@ const EditProfileContent = () => {
               onChange={handleInputChange}
               className="form-input"
               placeholder="Tu nombre"
+              required
             />
           </div>
 
@@ -164,11 +150,8 @@ const EditProfileContent = () => {
             </label>
             <input
               type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
+              value={user?.email || ""}
               className="form-input"
-              placeholder="tu@email.com"
               disabled
             />
             <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
