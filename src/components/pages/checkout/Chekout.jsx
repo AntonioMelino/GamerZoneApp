@@ -128,15 +128,15 @@ const CheckoutContent = () => {
         })),
         total: total,
         createdAt: new Date().toISOString(),
-        status: "pendiente",
+        status: "completada", // Estado correcto
       };
 
-      // Guardar en Firebase
+      // 1. Guardar en Firebase
       const refCollection = collection(db, "orders");
       const res = await addDoc(refCollection, firebaseOrder);
       const firebaseOrderId = res.id;
 
-      // Actualizar stock en Firebase
+      // 2. Actualizar stock en Firebase
       const productsCollection = collection(db, "products");
       await Promise.all(
         cart.map(async (item) => {
@@ -147,8 +147,9 @@ const CheckoutContent = () => {
         })
       );
 
-      // Crear orden local en CartContext
+      // 3. Crear orden local CON EL MISMO ID que Firebase
       const localOrder = createOrder({
+        id: firebaseOrderId, // USAR EL MISMO ID de Firebase
         firebaseId: firebaseOrderId,
         userId: user.uid,
         buyer: userData,
@@ -160,14 +161,15 @@ const CheckoutContent = () => {
         paymentMethod: "Mercado Pago",
         customerEmail: userData.email,
         status: "completed",
+        date: new Date().toISOString(),
       });
 
-      // Limpiar carrito
+      // 4. Limpiar carrito
       resetCart();
 
-      // Guardar IDs para mostrar en la página de éxito
+      // 5. Guardar IDs para mostrar en la página de éxito
       setOrderId(firebaseOrderId);
-      setLocalOrderId(localOrder.id);
+      setLocalOrderId(firebaseOrderId); // Mismo ID
     } catch (error) {
       console.error("[v0] Error al procesar la compra:", error);
       setError(
@@ -202,7 +204,7 @@ const CheckoutContent = () => {
             Tu pedido ha sido procesado exitosamente
           </Typography>
           <Typography className="checkout-order-id" variant="h6">
-            Número de orden (Firebase):
+            Número de orden:
             <div className="checkout-order-number">{orderId}</div>
           </Typography>
           <Typography className="checkout-success-info" variant="body2">
@@ -220,7 +222,7 @@ const CheckoutContent = () => {
             <Button
               className="checkout-profile-button"
               variant="outlined"
-              onClick={() => navigate(`/order-confirmation/${localOrderId}`)}
+              onClick={() => navigate(`/order-confirmation/${orderId}`)}
             >
               Ver confirmación detallada
             </Button>
