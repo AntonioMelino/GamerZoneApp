@@ -7,7 +7,8 @@ import Login from "./components/pages/login/Login";
 import Profile from "./components/pages/profile/Profile";
 import EditProfile from "./components/pages/profile/EditProfile";
 import OrdersHistory from "./components/pages/profile/OrdersHistory";
-import OrderConfirmation from "./components/pages/orderConfirmation/OrderConfirmation"; // NUEVO
+import OrderConfirmation from "./components/pages/orderConfirmation/OrderConfirmation";
+import OrderDetail from "./components/pages/orderDetail/OrderDetail";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageNotFound from "./components/pages/pageNotFound/PageNotFound";
@@ -46,7 +47,10 @@ function App() {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/profile/edit" element={<EditProfile />} />
                   <Route path="/profile/orders" element={<OrdersHistory />} />
-                  {/* NUEVA RUTA: */}
+                  <Route
+                    path="/profile/orders/:orderId"
+                    element={<OrderDetail />}
+                  />
                   <Route
                     path="/order-confirmation/:orderId"
                     element={<OrderConfirmation />}
