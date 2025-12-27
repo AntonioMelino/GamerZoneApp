@@ -3,13 +3,11 @@
 import { useContext, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { CartContext } from "../../../context/CartContext";
-import { useAuth } from "../../../context/AuthContext";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
 import "./OrderConfirmation.css";
-import { formatOrderDate } from "../../../utils/dateFormatter/DateFormatter"; // 🔥 NUEVA IMPORTACIÓN
+import { formatOrderDate } from "../../../utils/dateFormatter/DateFormatter";
 
 const formatPrice = (price) => {
   return new Intl.NumberFormat("es-AR").format(price);
@@ -18,7 +16,6 @@ const formatPrice = (price) => {
 const OrderConfirmation = () => {
   const { orderId } = useParams();
   const { getOrderById } = useContext(CartContext);
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const order = getOrderById(orderId);
@@ -96,9 +93,7 @@ const OrderConfirmation = () => {
           </div>
           <div className="summary-item">
             <span>Fecha:</span>
-            <span>
-              {formatOrderDate(order.date)} {/* 🔥 CAMBIADO */}
-            </span>
+            <span>{formatOrderDate(order.date)}</span>
           </div>
           <div className="summary-item">
             <span>Total:</span>
