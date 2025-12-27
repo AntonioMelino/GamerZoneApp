@@ -1,9 +1,9 @@
 "use client";
 
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { db } from "../firebaseConfig";
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export const CartContext = createContext();
 
@@ -47,7 +47,7 @@ const CartContextProvider = ({ children }) => {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
 
-          // 🔥 MODIFICACIÓN: Asegurar que la orden tenga fecha siempre
+          // Asegurar que la orden tenga fecha siempre
           let orderDate = data.date || data.createdAt;
 
           // Convertir a string ISO si es Timestamp de Firebase
@@ -69,7 +69,7 @@ const CartContextProvider = ({ children }) => {
             id: doc.id, // Usar ID de Firebase como ID local
             firebaseId: doc.id,
             ...data,
-            date: orderDate, // 🔥 Siempre guardar como string ISO
+            date: orderDate, // Siempre guardar como string ISO
           });
         });
 
@@ -80,7 +80,7 @@ const CartContextProvider = ({ children }) => {
         if (savedOrders) {
           try {
             localOrders = JSON.parse(savedOrders);
-            // 🔥 MODIFICACIÓN: Asegurar que las órdenes locales también tengan fecha
+            // Asegurar que las órdenes locales también tengan fecha
             localOrders = localOrders.map((order) => ({
               ...order,
               date: order.date || new Date().toISOString(),
@@ -150,7 +150,7 @@ const CartContextProvider = ({ children }) => {
               })
               .map((order) => ({
                 ...order,
-                date: order.date || new Date().toISOString(), // 🔥 Asegurar fecha
+                date: order.date || new Date().toISOString(), // Asegurar fecha
               }));
             setOrders(uniqueOrders);
           } catch (error) {
@@ -249,7 +249,7 @@ const CartContextProvider = ({ children }) => {
       orderData.firebaseId ||
       `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-    // 🔥 MODIFICACIÓN: Asegurar que la fecha sea string ISO
+    // Asegurar que la fecha sea string ISO
     let orderDate;
     if (orderData.date) {
       if (orderData.date.toDate) {
@@ -268,7 +268,7 @@ const CartContextProvider = ({ children }) => {
     const newOrder = {
       id: orderId,
       firebaseId: orderData.firebaseId || null,
-      date: orderDate, // 🔥 Siempre string ISO
+      date: orderDate, // Siempre string ISO
       items: [...cart],
       total: getTotalAmount(),
       status: orderData.status || "completed",
@@ -302,7 +302,7 @@ const CartContextProvider = ({ children }) => {
       (order) => order.id === orderId || order.firebaseId === orderId
     );
 
-    // 🔥 MODIFICACIÓN: Debug si no encuentra la orden
+    // Debug si no encuentra la orden
     if (!order) {
       console.warn("No se encontró orden con ID:", orderId);
       console.log(
@@ -332,7 +332,7 @@ const CartContextProvider = ({ children }) => {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
 
-        // 🔥 MODIFICACIÓN: Asegurar fecha
+        // Asegurar fecha
         let orderDate = data.date || data.createdAt;
         if (orderDate && orderDate.toDate) {
           orderDate = orderDate.toDate().toISOString();
