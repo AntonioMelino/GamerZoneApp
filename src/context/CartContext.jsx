@@ -45,10 +45,31 @@ const CartContextProvider = ({ children }) => {
 
         const firebaseOrders = [];
         querySnapshot.forEach((doc) => {
+          const data = doc.data();
+
+          // 🔥 MODIFICACIÓN: Asegurar que la orden tenga fecha siempre
+          let orderDate = data.date || data.createdAt;
+
+          // Convertir a string ISO si es Timestamp de Firebase
+          if (orderDate && orderDate.toDate) {
+            orderDate = orderDate.toDate().toISOString();
+          } else if (
+            orderDate &&
+            typeof orderDate === "object" &&
+            orderDate._seconds
+          ) {
+            // Si es Timestamp serializado ({_seconds, _nanoseconds})
+            orderDate = new Date(orderDate._seconds * 1000).toISOString();
+          } else if (!orderDate) {
+            // Si no hay fecha, usar fecha actual
+            orderDate = new Date().toISOString();
+          }
+
           firebaseOrders.push({
             id: doc.id, // Usar ID de Firebase como ID local
             firebaseId: doc.id,
-            ...doc.data(),
+            ...data,
+            date: orderDate, // 🔥 Siempre guardar como string ISO
           });
         });
 
@@ -59,6 +80,11 @@ const CartContextProvider = ({ children }) => {
         if (savedOrders) {
           try {
             localOrders = JSON.parse(savedOrders);
+            // 🔥 MODIFICACIÓN: Asegurar que las órdenes locales también tengan fecha
+            localOrders = localOrders.map((order) => ({
+              ...order,
+              date: order.date || new Date().toISOString(),
+            }));
           } catch (error) {
             console.error("[v0] Error al cargar órdenes locales:", error);
           }
@@ -94,9 +120,7 @@ const CartContextProvider = ({ children }) => {
 
         // 5. Ordenar por fecha más reciente
         uniqueOrders.sort(
-          (a, b) =>
-            new Date(b.date || b.createdAt || 0) -
-            new Date(a.date || a.createdAt || 0)
+          (a, b) => new Date(b.date || 0) - new Date(a.date || 0)
         );
 
         setOrders(uniqueOrders);
@@ -115,14 +139,19 @@ const CartContextProvider = ({ children }) => {
             const parsedOrders = JSON.parse(savedOrders);
             // Eliminar duplicados incluso en fallback
             const seenIds = new Set();
-            const uniqueOrders = parsedOrders.filter((order) => {
-              const id = order.firebaseId || order.id;
-              if (!seenIds.has(id)) {
-                seenIds.add(id);
-                return true;
-              }
-              return false;
-            });
+            const uniqueOrders = parsedOrders
+              .filter((order) => {
+                const id = order.firebaseId || order.id;
+                if (!seenIds.has(id)) {
+                  seenIds.add(id);
+                  return true;
+                }
+                return false;
+              })
+              .map((order) => ({
+                ...order,
+                date: order.date || new Date().toISOString(), // 🔥 Asegurar fecha
+              }));
             setOrders(uniqueOrders);
           } catch (error) {
             console.error("[v0] Error en fallback:", error);
@@ -220,10 +249,26 @@ const CartContextProvider = ({ children }) => {
       orderData.firebaseId ||
       `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
+    // 🔥 MODIFICACIÓN: Asegurar que la fecha sea string ISO
+    let orderDate;
+    if (orderData.date) {
+      if (orderData.date.toDate) {
+        orderDate = orderData.date.toDate().toISOString();
+      } else if (typeof orderData.date === "string") {
+        orderDate = orderData.date;
+      } else if (orderData.date instanceof Date) {
+        orderDate = orderData.date.toISOString();
+      } else {
+        orderDate = new Date(orderData.date).toISOString();
+      }
+    } else {
+      orderDate = new Date().toISOString();
+    }
+
     const newOrder = {
       id: orderId,
       firebaseId: orderData.firebaseId || null,
-      date: orderData.date || new Date().toISOString(),
+      date: orderDate, // 🔥 Siempre string ISO
       items: [...cart],
       total: getTotalAmount(),
       status: orderData.status || "completed",
@@ -253,9 +298,20 @@ const CartContextProvider = ({ children }) => {
 
   // Función para obtener una orden por ID
   const getOrderById = (orderId) => {
-    return orders.find(
+    const order = orders.find(
       (order) => order.id === orderId || order.firebaseId === orderId
     );
+
+    // 🔥 MODIFICACIÓN: Debug si no encuentra la orden
+    if (!order) {
+      console.warn("No se encontró orden con ID:", orderId);
+      console.log(
+        "Órdenes disponibles:",
+        orders.map((o) => ({ id: o.id, firebaseId: o.firebaseId }))
+      );
+    }
+
+    return order;
   };
 
   // Función para obtener órdenes por userId
@@ -274,10 +330,21 @@ const CartContextProvider = ({ children }) => {
 
       const firebaseOrders = [];
       querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        // 🔥 MODIFICACIÓN: Asegurar fecha
+        let orderDate = data.date || data.createdAt;
+        if (orderDate && orderDate.toDate) {
+          orderDate = orderDate.toDate().toISOString();
+        } else if (!orderDate) {
+          orderDate = new Date().toISOString();
+        }
+
         firebaseOrders.push({
           id: doc.id,
           firebaseId: doc.id,
-          ...doc.data(),
+          ...data,
+          date: orderDate,
         });
       });
 

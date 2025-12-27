@@ -11,6 +11,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import "./OrdersHistory.css";
+import { formatOrderDate } from "../../../utils/dateFormatter/DateFormatter"; // 🔥 NUEVA IMPORTACIÓN
 
 const OrdersHistory = () => {
   return (
@@ -137,13 +138,7 @@ const OrdersHistoryContent = () => {
               <div>
                 <div className="order-id">Orden #{order.id.slice(-8)}</div>
                 <div className="order-date">
-                  {new Date(order.date).toLocaleDateString("es-ES", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {formatOrderDate(order.date)} {/* 🔥 CAMBIADO */}
                 </div>
               </div>
               <div

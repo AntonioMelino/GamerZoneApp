@@ -9,6 +9,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
 import "./OrderConfirmation.css";
+import { formatOrderDate } from "../../../utils/dateFormatter/DateFormatter"; // 🔥 NUEVA IMPORTACIÓN
 
 const formatPrice = (price) => {
   return new Intl.NumberFormat("es-AR").format(price);
@@ -96,13 +97,7 @@ const OrderConfirmation = () => {
           <div className="summary-item">
             <span>Fecha:</span>
             <span>
-              {new Date(order.date).toLocaleDateString("es-ES", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {formatOrderDate(order.date)} {/* 🔥 CAMBIADO */}
             </span>
           </div>
           <div className="summary-item">

@@ -14,6 +14,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PersonIcon from "@mui/icons-material/Person";
+import { formatOrderDate } from "../../../utils/dateFormatter/DateFormatter";
 import "./OrderDetail.css";
 
 const formatPrice = (price) => {
@@ -135,16 +136,7 @@ const OrderDetail = () => {
 
           <div className="order-date-display">
             <span className="date-label">Fecha de compra:</span>
-            <span className="date-value">
-              {new Date(order.date).toLocaleDateString("es-ES", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
+            <span className="date-value">{formatOrderDate(order.date)}</span>
           </div>
         </div>
 
