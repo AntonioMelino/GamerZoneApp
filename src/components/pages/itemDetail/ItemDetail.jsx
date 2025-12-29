@@ -13,6 +13,7 @@ import "./ItemDetail.css";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
+import ProductRecommendations from "../../common/productRecommendations/ProductRecommendations";
 
 const formatPrice = (price) => {
   return new Intl.NumberFormat("es-AR", {
@@ -45,79 +46,86 @@ const ItemDetail = () => {
   }
 
   return (
-    <div className="item-detail-container">
-      <Card className="item-detail-card">
-        <div className="item-detail-main-content">
-          {" "}
-          {/* NUEVO contenedor */}
-          <div className="item-detail-image-container">
-            <img
-              className="item-detail-image"
-              src={
-                imageError
-                  ? "/placeholder.svg?height=400&width=400&query=producto"
-                  : item.imageUrl
-              }
-              alt={item.title}
-              onError={handleImageError}
-            />
-          </div>
-          <CardContent className="item-detail-content">
-            <Typography
-              className="item-detail-title"
-              gutterBottom
-              variant="h4"
-              component="div"
-            >
-              {item.title}
-            </Typography>
-            <Typography
-              className="item-detail-price"
-              gutterBottom
-              variant="h5"
-              component="div"
-            >
-              {formatPrice(item.price)}
-            </Typography>
-            <Typography className="item-detail-description" variant="body1">
-              {item.description}
-            </Typography>
-
-            <div className="item-detail-features">
-              <div className="item-detail-feature">
-                <LocalShippingIcon className="item-detail-feature-icon" />
-                <Typography
-                  className="item-detail-feature-text"
-                  variant="body2"
-                >
-                  Envío GRATIS
-                </Typography>
-              </div>
-              <div className="item-detail-feature">
-                <VerifiedIcon className="item-detail-feature-icon" />
-                <Typography
-                  className="item-detail-feature-text"
-                  variant="body2"
-                >
-                  Garantía Oficial 12 meses
-                </Typography>
-              </div>
-              <div className="item-detail-feature">
-                <CreditCardIcon className="item-detail-feature-icon" />
-                <Typography
-                  className="item-detail-feature-text"
-                  variant="body2"
-                >
-                  ¡12 cuotas sin interés!
-                </Typography>
-              </div>
+    <div className="item-detail-wrapper">
+      <div className="item-detail-container">
+        <Card className="item-detail-card">
+          <div className="item-detail-main-content">
+            <div className="item-detail-image-container">
+              <img
+                className="item-detail-image"
+                src={
+                  imageError
+                    ? "/placeholder.svg?height=400&width=400&query=producto"
+                    : item.imageUrl
+                }
+                alt={item.title}
+                onError={handleImageError}
+              />
             </div>
-          </CardContent>
-        </div>
-        <CardActions className="item-detail-actions">
-          <Counter item={item} />
-        </CardActions>
-      </Card>
+            <CardContent className="item-detail-content">
+              <Typography
+                className="item-detail-title"
+                gutterBottom
+                variant="h4"
+                component="div"
+              >
+                {item.title}
+              </Typography>
+              <Typography
+                className="item-detail-price"
+                gutterBottom
+                variant="h5"
+                component="div"
+              >
+                {formatPrice(item.price)}
+              </Typography>
+              <Typography className="item-detail-description" variant="body1">
+                {item.description}
+              </Typography>
+
+              <div className="item-detail-features">
+                <div className="item-detail-feature">
+                  <LocalShippingIcon className="item-detail-feature-icon" />
+                  <Typography
+                    className="item-detail-feature-text"
+                    variant="body2"
+                  >
+                    Envío GRATIS
+                  </Typography>
+                </div>
+                <div className="item-detail-feature">
+                  <VerifiedIcon className="item-detail-feature-icon" />
+                  <Typography
+                    className="item-detail-feature-text"
+                    variant="body2"
+                  >
+                    Garantía Oficial 12 meses
+                  </Typography>
+                </div>
+                <div className="item-detail-feature">
+                  <CreditCardIcon className="item-detail-feature-icon" />
+                  <Typography
+                    className="item-detail-feature-text"
+                    variant="body2"
+                  >
+                    ¡12 cuotas sin interés!
+                  </Typography>
+                </div>
+              </div>
+            </CardContent>
+          </div>
+          <CardActions className="item-detail-actions">
+            <Counter item={item} />
+          </CardActions>
+        </Card>
+      </div>
+
+      <ProductRecommendations
+        currentProductId={item.id}
+        currentCategory={item.category}
+        excludeIds={[item.id]}
+        maxRecommendations={4}
+      />
     </div>
   );
 };
